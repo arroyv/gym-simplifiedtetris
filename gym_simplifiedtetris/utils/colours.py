@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Tuple
 
-from matplotlib import colors
 import numpy as np
+from matplotlib import colors
 
 
 def _get_bgr_code(colour_name: str, /) -> Tuple[float, float, float]:
@@ -15,7 +15,7 @@ def _get_bgr_code(colour_name: str, /) -> Tuple[float, float, float]:
     return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
 
 
-class _Colours(Enum):
+class Colours(Enum):
     """
     Enumerate inverted RGB code.
     """

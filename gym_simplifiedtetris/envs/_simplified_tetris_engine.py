@@ -10,7 +10,7 @@ from PIL import Image
 
 # import imageio
 
-from gym_simplifiedtetris._utils import _Piece, _Colours
+from gym_simplifiedtetris.utils import Polymino, Colours
 
 
 class _SimplifiedTetrisEngine(object):
@@ -62,14 +62,14 @@ class _SimplifiedTetrisEngine(object):
     CELL_SIZE = 50
 
     BLOCK_COLOURS = {
-        0: _Colours.WHITE.value,
-        1: _Colours.CYAN.value,
-        2: _Colours.ORANGE.value,
-        3: _Colours.YELLOW.value,
-        4: _Colours.PURPLE.value,
-        5: _Colours.BLUE.value,
-        6: _Colours.GREEN.value,
-        7: _Colours.RED.value,
+        0: Colours.WHITE.value,
+        1: Colours.CYAN.value,
+        2: Colours.ORANGE.value,
+        3: Colours.YELLOW.value,
+        4: Colours.PURPLE.value,
+        5: Colours.BLUE.value,
+        6: Colours.GREEN.value,
+        7: Colours.RED.value,
     }
 
     @staticmethod
@@ -98,7 +98,7 @@ class _SimplifiedTetrisEngine(object):
                     (x_offsets[i], 60 * (count + 1)),
                     cv.FONT_HERSHEY_SIMPLEX,
                     1,
-                    _Colours.WHITE.value,
+                    Colours.WHITE.value,
                     2,
                     cv.LINE_AA,
                 )
@@ -146,7 +146,7 @@ class _SimplifiedTetrisEngine(object):
         """Create a dictionary containing the pieces."""
         self._pieces = {}
         for idx in range(self._num_pieces):
-            self._pieces[idx] = _Piece(self._piece_size, idx)
+            self._pieces[idx] = Polymino(self._piece_size, idx)
 
     def _reset(self) -> None:
         """Reset the score, grid, piece coords, piece id and anchor."""
@@ -226,7 +226,7 @@ class _SimplifiedTetrisEngine(object):
             + 1,
             400:,
             :,
-        ] = _Colours.RED.value
+        ] = Colours.RED.value
 
     def _get_grid(self) -> np.ndarray:
         """
@@ -264,10 +264,10 @@ class _SimplifiedTetrisEngine(object):
         for j in range(-int(self.CELL_SIZE / 40), int(self.CELL_SIZE / 40) + 1):
             self._img[
                 [i * self.CELL_SIZE + j for i in range(self._height)], :, :
-            ] = _Colours.BLACK.value
+            ] = Colours.BLACK.value
             self._img[
                 :, [i * self.CELL_SIZE + j for i in range(self._width)], :
-            ] = _Colours.BLACK.value
+            ] = Colours.BLACK.value
 
     def _add_img_left(self) -> None:
         """

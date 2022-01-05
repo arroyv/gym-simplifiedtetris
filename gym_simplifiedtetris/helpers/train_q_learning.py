@@ -4,9 +4,8 @@ from typing import Optional
 
 import gym
 import numpy as np
-from tqdm import tqdm
-
 from gym_simplifiedtetris.agents.q_learning import QLearningAgent
+from tqdm import tqdm
 
 
 def train_q_learning(
@@ -43,7 +42,7 @@ def train_q_learning(
         ep_return += info["num_rows_cleared"]
 
         # Anneal epsilon so that it is zero by the end of training.
-        agent.epsilon -= 1 / (num_eval_timesteps)
+        agent.epsilon -= 1 / num_eval_timesteps
 
         if done:
             obs = env.reset()

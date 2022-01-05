@@ -1,6 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 
@@ -39,7 +39,7 @@ _TROMINOS[1] = {
     "name": "L",
 }
 
-_TETRIMINOS = dict()
+_TETRIMINOS: PiecesInfo = dict()
 _TETRIMINOS[0] = {
     "coords": {
         0: [(0, 0), (0, -1), (0, -2), (0, -3)],
@@ -111,7 +111,7 @@ _PIECES_DICT[3] = _TROMINOS
 _PIECES_DICT[4] = _TETRIMINOS
 
 
-def _generate_max_min(coord_string: str, coords: PieceCoords):
+def _generate_max_min(coord_string: str, coords: PieceCoords) -> Dict[int, int]:
     """
     Return the max and min x and y coordinates for the coordinate string and coordinates provided.
 
@@ -119,7 +119,7 @@ def _generate_max_min(coord_string: str, coords: PieceCoords):
     :param coords: the piece coordinates.
     :return: the max and min x and y coordinates for the coordinate string and coordinates provided.
     """
-    coord_strings = {
+    coord_strings: Dict[str, Dict[str, Any]] = {
         "max_y_coord": {"func": np.max, "index": 1},
         "min_y_coord": {"func": np.min, "index": 1},
         "max_x_coord": {"func": np.max, "index": 0},
@@ -135,7 +135,7 @@ def _generate_max_min(coord_string: str, coords: PieceCoords):
 
 
 @dataclass
-class _Piece(object):
+class Polymino(object):
     """
     Class for instantiating a Tetris piece.
     """

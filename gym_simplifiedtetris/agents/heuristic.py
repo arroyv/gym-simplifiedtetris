@@ -1,5 +1,4 @@
-"""
-A heuristic agent class.
+"""Contains a heuristic agent class.
 """
 
 import numpy as np
@@ -11,9 +10,9 @@ class HeuristicAgent(object):
     """
 
     @staticmethod
-    def predict(ratings_or_priorities: np.array, /) -> int:
+    def predict(ratings_or_priorities: np.ndarray, /) -> int:
         """
-        Return that action yielding the largest heuristic score. Separate ties
+        Returns the action yielding the largest heuristic score. Separates ties
         using a priority rating, which is based on the translation and
         rotation.
 

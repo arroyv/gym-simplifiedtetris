@@ -22,13 +22,13 @@ def main() -> None:
         env = gym.make(env_name)
         check_env(env=env, skip_render_check=True)
 
-        obs = env.reset()
+        _ = env.reset()
 
         num_episodes = 0
         is_first_move = True
         while num_episodes < 3:
             action = env.action_space.sample()
-            obs, reward, done, _ = env.step(action)
+            _, reward, done, _ = env.step(action)
 
             assert (
                 env.reward_range[0] <= reward <= env.reward_range[1]
@@ -39,7 +39,7 @@ def main() -> None:
 
             if done:
                 num_episodes += 1
-                obs = env.reset()
+                _ = env.reset()
 
         env.close()
 

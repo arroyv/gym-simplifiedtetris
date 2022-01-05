@@ -1,8 +1,9 @@
 import itertools
+from typing import List
 
 from gym.envs.registration import register as register_env_in_gym
 
-env_list: list = []
+env_list: List[str] = []
 
 
 def register_env(incomplete_id: str, entry_point: str) -> None:
@@ -21,12 +22,14 @@ def register_env(incomplete_id: str, entry_point: str) -> None:
             start with "gym_simplifiedtetris.envs:SimplifiedTetris".'
     assert entry_point.endswith("Env"), 'Entry point should end with "Env".'
 
-    grid_dims = [[20, 10], [10, 10], [8, 6], [7, 4]]
-    piece_sizes = [4, 3, 2, 1]
+    grid_dims: List[List[int]] = [[20, 10], [10, 10], [8, 6], [7, 4]]
+    piece_sizes: List[int] = [4, 3, 2, 1]
 
-    for (height, width), piece_size in list(
+    all_combinations: List[tuple[List[int], int]] = list(
         itertools.product(*[grid_dims, piece_sizes])
-    ):
+    )
+
+    for (height, width), piece_size in all_combinations:
         idx = incomplete_id + f"-{height}x{width}-{piece_size}-v0"
 
         assert idx not in env_list, f"Already registered env id: {idx}"

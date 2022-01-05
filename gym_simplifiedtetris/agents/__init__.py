@@ -1,4 +1,5 @@
-"""Initialise the agents module."""
+"""Initialise the agents module.
+"""
 
 from gym_simplifiedtetris.agents.heuristic import HeuristicAgent
 from gym_simplifiedtetris.agents.q_learning import QLearningAgent

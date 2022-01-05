@@ -1,5 +1,4 @@
-"""
-A Q-learning agent class.
+"""A Q-learning agent class.
 """
 
 from typing import Optional, Sequence
