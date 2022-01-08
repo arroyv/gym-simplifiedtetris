@@ -6,26 +6,32 @@ import numpy as np
 
 
 class _PotentialBasedShapingReward(object):
-    """A potential-based shaping reward object."""
+    """A potential-based shaping reward based on the number of holes in the Tetris grid.
 
+    :attr _heuristic_range: min and max heuristic values seen so far.
+    :attr _old_potential: previous potential.
+    """
+
+    # Number of lines cleared is in the range [0, 4]. Every potential is in the range [0, 1]. Therefore, the difference between the new potential and the old potential is in the range [-1, 1]. Hence, the shaping reward range is [-1, 5].
     reward_range = (-1, 5)
 
-    def __init__(self):
-        self._heuristic_range = {"min": 1000, "max": -1}
+    # The old potential is 1 because there are no holes at the start of a game.
+    _INITIAL_POTENTIAL = 1
 
-        # The old potential is 1 because there are no holes at the start of a
-        # game.
-        self._old_potential = 1
-        self._initial_potential = self._old_potential
+    def __init__(self) -> None:
+        """Constructor."""
+        # Setting the range in this way ensures that the min and max are definitely updated the first time the method "_update_range" is called.
+        self._heuristic_range = {"min": 1000, "max": -1}
+        self._old_potential = self._INITIAL_POTENTIAL
 
     def _get_reward(self) -> Tuple[float, int]:
-        """
-        Override superclass method and return the potential-based shaping reward.
+        """Override superclass method and return the potential-based shaping reward.
 
-        :return: the potential-based shaping reward and the number of lines cleared.
+        :return: potential-based shaping reward and the number of lines cleared.
         """
         num_lines_cleared = self._engine._clear_rows()
         heuristic_value = self._engine._get_holes()
+
         self._update_range(heuristic_value)
 
         new_potential = np.clip(
@@ -41,21 +47,19 @@ class _PotentialBasedShapingReward(object):
         return shaping_reward, num_lines_cleared
 
     def _get_terminal_reward(self) -> float:
-        """
-        Override superclass method and return the terminal potential-based shaping reward.
+        """Override superclass method and return the terminal potential-based shaping reward.
 
-        :return: the terminal potential-based shaping reward.
+        :return: terminal potential-based shaping reward.
         """
         terminal_shaping_reward = -self._old_potential
-        self._old_potential = self._initial_potential
+        self._old_potential = self._INITIAL_POTENTIAL
 
         return terminal_shaping_reward
 
     def _update_range(self, heuristic_value: int) -> None:
-        """
-        Update the heuristic range.
+        """Update the heuristic range.
 
-        :param heuristic_value: the computed heuristic value.
+        :param heuristic_value: computed heuristic value.
         """
         if heuristic_value > self._heuristic_range["max"]:
             self._heuristic_range["max"] = heuristic_value

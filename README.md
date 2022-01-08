@@ -45,15 +45,14 @@
 
 Gym-SimplifiedTetris is a pip installable package that creates simplified Tetris environments compliant with [OpenAI Gym's API](https://github.com/openai/gym). Gym's API is the field standard for developing and comparing reinforcement learning algorithms.
 
-The environments implemented in this package are simplified because the player must select the column and piece's rotation before the piece is dropped vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
+There are currently [three agents](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/agents) and [64 environments](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/envs) provided. The environments are simplified because the player must select the column and piece's rotation before the piece starts falling vertically downwards. If one looks at the previous approaches to the game of Tetris, most of them use this simplified setting.
 
 ---
 
 - [1. Installation](#1-installation)
 - [2. Usage](#2-usage)
-- [3. Agents and environments](#3-agents-and-environments)
-- [4. Future work](#4-future-work)
-- [5. Acknowledgements](#5-acknowledgements)
+- [3. Future work](#3-future-work)
+- [4. Acknowledgements](#4-acknowledgements)
 
 ## 1. Installation
 
@@ -109,16 +108,12 @@ from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 env = Tetris(grid_dims=(20, 10), piece_size=4)
 ```
 
-## 3. Agents and environments
-
-Three agents — described in [gym_simplifiedtetris/agents](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/agents) — are provided. There are currently 64 environments provided; a description can be found in [gym_simplifiedtetris/envs](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/gym_simplifiedtetris/envs).
-
-## 4. Future work
+## 3. Future work
 
 - Normalise the observation spaces
-- Implement an action space that only permits non-terminal actions to be taken
+- Implement an action space that only permits the agent to take non-terminal actions
 - Implement more shaping rewards: potential-style, potential-based, dynamic potential-based, and non-potential. Optimise their weights using an optimisation algorithm.
 
-## 5. Acknowledgements
+## 4. Acknowledgements
 
 This package utilises several methods from the [codebase](https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning) developed by andreanlay (2020) and the [codebase](https://github.com/Benjscho/gym-mdptetris) developed by Benjscho (2021).

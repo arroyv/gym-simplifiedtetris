@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 """A script for running training and evaluating a Q-learning agent."""
 
 
 from gym_simplifiedtetris.agents import QLearningAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
-from gym_simplifiedtetris.helpers import train_q_learning, eval_agent
+from gym_simplifiedtetris.helpers import eval_agent, train_q_learning
 
 
 def main() -> None:

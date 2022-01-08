@@ -6,19 +6,17 @@ from matplotlib import colors
 
 
 def _get_bgr_code(colour_name: str, /) -> Tuple[float, float, float]:
-    """
-    Get the inverted RGB code corresponding to the arg provided.
+    """Returns the inverted RGB code corresponding to the arg provided.
 
-    :param colour_name: a string of the colour name,
-    :return: an inverted RGB code of the inputted colour name.
+    :param colour_name: string of the colour name,
+
+    :return: inverted RGB code of the inputted colour name.
     """
     return tuple(np.array([255, 255, 255]) * colors.to_rgb(colour_name))[::-1]
 
 
 class Colours(Enum):
-    """
-    Enumerate inverted RGB code.
-    """
+    """Enumerate inverted RGB code."""
 
     WHITE = _get_bgr_code("white")
     BLACK = _get_bgr_code("black")

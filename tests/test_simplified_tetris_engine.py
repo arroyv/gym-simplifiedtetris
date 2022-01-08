@@ -130,7 +130,7 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
 
     def test__get_dellacherie_scores_empty_grid(self) -> None:
         self.engine._piece = Polymino(self.piece_size, 0)
-        print(self.engine._all_available_actions[self.engine._piece._idx])
+        print(self.engine._all_available_actions[self.engine._piece._id])
         array_to_compare = np.array(
             [
                 0.0,

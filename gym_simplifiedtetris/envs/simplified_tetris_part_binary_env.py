@@ -1,53 +1,50 @@
-"""Contains a simplified Tetris env class with a part-binary obs space."""
+"""Contains a simplified Tetris env class with a part-binary obs space.
+"""
 
 import numpy as np
 from gym import spaces
-
-from gym_simplifiedtetris.register import register_env
 from gym_simplifiedtetris.envs._simplified_tetris_base_env import (
     _SimplifiedTetrisBaseEnv,
 )
+from gym_simplifiedtetris.register import register_env
 
 
 class SimplifiedTetrisPartBinaryEnv(_SimplifiedTetrisBaseEnv):
-    """
-    A simplified Tetris environment, where the observation space is a
-    flattened NumPy array containing the grid's binary representation
-    excluding the top piece_size rows, plus the current piece's id.
+    """A simplified Tetris environment.
 
-    :param grid_dims: the grid dimensions.
-    :param piece_size: the size of every piece.
-    :param seed: the rng seed.
+    The observation space is a flattened NumPy array containing the grid's binary representation excluding the top |piece_size| rows, plus the current piece's id.
+
+    :param grid_dims: grid dimensions.
+    :param piece_size: size of every piece.
+    :param seed: rng seed.
     """
 
     @property
     def observation_space(self) -> spaces.Box:
-        """
-        Override the superclass property.
+        """Override the superclass property.
 
-        :return: a Box obs space.
+        :return: Box obs space.
         """
+        low = np.append(np.zeros(self._width_ * (self._height_ - self._piece_size_)), 0)
+        high = np.append(
+            np.ones(self._width_ * (self._height_ - self._piece_size_)),
+            self._num_pieces_ - 1,
+        )
         return spaces.Box(
-            low=np.append(
-                np.zeros(self._width_ * (self._height_ - self._piece_size_)), 0
-            ),
-            high=np.append(
-                np.ones(self._width_ * (self._height_ - self._piece_size_)),
-                self._num_pieces_ - 1,
-            ),
+            low=low,
+            high=high,
             dtype=np.int,
         )
 
     def _get_obs(self) -> np.array:
-        """
-        Override superclass method and return a flattened NumPy array
-        containing the grid's binary representation excluding the top
-        piece_size rows, plus the current piece's id.
+        """Returns a flattened NumPy array containing the grid's binary representation excluding the top |piece_size| rows, plus the current piece's id.
 
-        :return: the current observation.
+        Overrides the superclass method.
+
+        :return: current observation.
         """
         current_grid = self._engine._grid[:, self._piece_size_ :].flatten()
-        return np.append(current_grid, self._engine._piece._idx)
+        return np.append(current_grid, self._engine._piece._id)
 
 
 register_env(

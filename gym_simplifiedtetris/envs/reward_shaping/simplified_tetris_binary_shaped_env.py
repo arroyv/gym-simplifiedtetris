@@ -1,27 +1,24 @@
-"""Contains a simplified Tetris env with a binary obs space and shaped reward function."""
+"""Contains a simplified Tetris env with a binary obs space and a shaped reward function.
+"""
 
-from gym_simplifiedtetris.register import register_env
 from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
     SimplifiedTetrisBinaryEnv,
 )
+from gym_simplifiedtetris.register import register_env
+
 from ._potential_based_shaping_reward import _PotentialBasedShapingReward
 
 
 class SimplifiedTetrisBinaryShapedEnv(
     _PotentialBasedShapingReward, SimplifiedTetrisBinaryEnv
 ):
-    """
-    A simplified Tetris environment, where the reward function is a
-    potential-based shaping reward and the observation space is the grid's
-    binary representation plus the current piece's id.
+    """A simplified Tetris environment.
 
-    :param grid_dims: the grid's dimensions.
-    :param piece_size: the size of the pieces in use.
-    :param seed: the rng seed.
+    The reward function is a potential-based shaping reward and the observation space is the grid's binary representation plus the current piece's id.
     """
 
-    def __init__(self, **kwargs):
-        """Extend the two superclasses."""
+    def __init__(self, **kwargs) -> None:
+        """Constructor."""
         super().__init__()
         SimplifiedTetrisBinaryEnv.__init__(self, **kwargs)
 

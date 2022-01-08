@@ -1,7 +1,6 @@
 # Other
 .DS_Store
 .vscode
-venv
 typings
 
 # Byte-compiled / optimized / DLL files

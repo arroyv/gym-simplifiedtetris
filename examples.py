@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""
-Two usage examples shown in the README.md file.
+"""Two usage examples shown in the README.md file.
 """
 
 

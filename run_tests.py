@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 """A script for running some tests on the envs."""
 
 
@@ -11,8 +8,7 @@ from gym_simplifiedtetris.register import env_list
 
 
 def main() -> None:
-    """
-    Check if each env created is compliant with the OpenAI Gym API
+    """Checks if each env created is compliant with the OpenAI Gym API
 
     Plays ten games using an agent that selects actions uniformly at random. In every game, validate the reward received, and render the env for visual inspection.
     """

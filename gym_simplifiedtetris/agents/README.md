@@ -26,7 +26,7 @@ The heuristic agent selects the action with the highest heuristic score, based o
 
 ***- landing height + eroded cells - row transitions - column transitions -4 x holes - cumulative wells***
 
-Similarly to how Colin Fahey implemented Dellacherie's agent, ties are broken by selecting the action with the largest priority. Deviations from and to the left of the centre of the grid are rewarded, and rotations are punished. See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic_agent.py) for an example of how to use it.
+Similar to how Colin Fahey implemented Dellacherie's agent, ties are broken by selecting the action with the largest priority. Deviations from and to the left of the center of the grid are rewarded, and rotations are punished. See [run_heuristic_agent.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/run_heuristic_agent.py) for an example of how to use it.
 
 <p align="center">
     <img src="https://github.com/OliverOverend/gym-simplifiedtetris/raw/master/assets/20x10_4_heuristic.gif" width="500">
