@@ -47,7 +47,7 @@ class _PotentialBasedShapingReward(object):
         return shaping_reward, num_lines_cleared
 
     def _get_terminal_reward(self) -> float:
-        """Override superclass method and return the terminal potential-based shaping reward.
+        """Override the superclass method and return the terminal potential-based shaping reward.
 
         :return: terminal potential-based shaping reward.
         """

@@ -1,7 +1,7 @@
 import random
 import time
 from copy import deepcopy
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple, Union
 
 import cv2.cv2 as cv
 import numpy as np
@@ -13,7 +13,7 @@ class _SimplifiedTetrisEngine(object):
     """
     Creates a Tetris engine object, which has a hard-drop mechanism for dropping the pieces and the methods listed below.
 
-    Rendering related methods:
+    Methods related to rendering the env:
     > _close
     > _add_statistics
     > _render
@@ -23,7 +23,7 @@ class _SimplifiedTetrisEngine(object):
     > _draw_separating_lines
     > _add_img_left
 
-    Game dynamics related methods:
+    Methods related to the game dynamics:
     > _rotate_piece
     > _get_translation_rotation
     > _generate_id_randomly
@@ -38,7 +38,7 @@ class _SimplifiedTetrisEngine(object):
     > _get_all_available_actions
     > _compute_available_actions
 
-    Heuristic agent related methods:
+    Methods related to the heuristic agent:
     > _get_dellacherie_scores
     > _get_priorities
     > _get_dellacherie_funcs
@@ -49,10 +49,8 @@ class _SimplifiedTetrisEngine(object):
     > _get_holes
     > _get_cumulative_wells
 
-    :param grid_dims: the grid dimensions (height and width).
-    :param piece_size: the size of the pieces in use.
-    :param num_pieces: the number of pieces in use.
-    :param num_actions: the number of available actions in each state.
+    TODO
+    :attr:
     """
 
     CELL_SIZE = 50
@@ -77,7 +75,7 @@ class _SimplifiedTetrisEngine(object):
 
     @staticmethod
     def _add_statistics(
-        img: np.ndarray, items: List[List[str]], x_offsets: List[int], /
+        img: np.ndarray, items: Iterable[Iterable[str]], x_offsets: Iterable[int], /
     ) -> None:
         """
         Add statistics to the array provided.
@@ -102,11 +100,18 @@ class _SimplifiedTetrisEngine(object):
     def __init__(
         self,
         *,
-        grid_dims: Sequence[int],
+        grid_dims: Union[Tuple[int, int], List[int]],
         piece_size: int,
         num_pieces: int,
         num_actions: int,
     ) -> None:
+        """Constructor.
+
+        :param grid_dims: grid dimensions (height, width).
+        :param piece_size: size of each piece in use.
+        :param num_pieces: number of pieces in use.
+        :param num_actions: number of available actions in each state.
+        """
         self._height, self._width = grid_dims
         self._piece_size = piece_size
         self._num_pieces = num_pieces
@@ -130,8 +135,7 @@ class _SimplifiedTetrisEngine(object):
         self._reset()
 
     def _generate_id_randomly(self) -> int:
-        """
-        Randomly generate an id.
+        """Generate an id, uniformly at random.
 
         :return: a randomly generated ID.
         """
@@ -139,9 +143,9 @@ class _SimplifiedTetrisEngine(object):
 
     def _initialise_pieces(self) -> None:
         """Create a dictionary containing the pieces."""
-        self._pieces = {}
-        for idx in range(self._num_pieces):
-            self._pieces[idx] = Polymino(self._piece_size, idx)
+        self._pieces = {
+            idx: Polymino(self._piece_size, idx) for idx in range(self._num_pieces)
+        }
 
     def _reset(self) -> None:
         """Reset the score, grid, piece coords, piece id and anchor."""
@@ -151,8 +155,7 @@ class _SimplifiedTetrisEngine(object):
         self._update_coords_and_anchor()
 
     def _render(self, mode: Optional[str] = "human", /) -> np.ndarray:
-        """
-        Show an image of the current grid, having dropped the current piece.
+        """Show an image of the current grid, having dropped the current piece.
         The human has the option to pause (SPACEBAR), speed up (RIGHT key),
         slow down (LEFT key) or quit (ESC) the window.
 
@@ -224,8 +227,7 @@ class _SimplifiedTetrisEngine(object):
         ] = Colours.RED.value
 
     def _get_grid(self) -> np.ndarray:
-        """
-        Get the array of the current grid containing the colour tuples.
+        """Get the array of the current grid containing the colour tuples.
 
         :return: the array of the current grid.
         """
@@ -237,9 +239,7 @@ class _SimplifiedTetrisEngine(object):
         return np.array(grid)
 
     def _resize_grid(self, grid: np.ndarray, /) -> None:
-        """
-        Reshape the grid, convert it to an Image and resize it, then convert it
-        to an array.
+        """Reshape the grid, convert it to an Image and resize it.
 
         :param grid: the grid to be resized.
         """
@@ -253,9 +253,7 @@ class _SimplifiedTetrisEngine(object):
         self._img = np.array(self._img)
 
     def _draw_separating_lines(self) -> None:
-        """
-        Draw the horizontal and vertical _black lines to separate the grid's cells.
-        """
+        """Draw the horizontal and vertical _black lines to separate the grid's cells."""
         for j in range(-int(self.CELL_SIZE / 40), int(self.CELL_SIZE / 40) + 1):
             self._img[
                 [i * self.CELL_SIZE + j for i in range(self._height)], :, :
@@ -265,9 +263,7 @@ class _SimplifiedTetrisEngine(object):
             ] = Colours.BLACK.value
 
     def _add_img_left(self) -> None:
-        """
-        Add the image that will appear to the left of the grid.
-        """
+        """Add the image that will appear to the left of the grid."""
         img_array = np.zeros((self._height * self.CELL_SIZE, 400, 3)).astype(np.uint8)
         mean_score = (
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
@@ -301,9 +297,7 @@ class _SimplifiedTetrisEngine(object):
         self._anchor = [self._width / 2 - 1, self._piece_size - 1]
 
     def _is_illegal(self) -> bool:
-        """
-        Check if the piece's current position is illegal by looping over each
-        of its square blocks.
+        """Check if the piece's current position is illegal by looping over each of its square blocks.
 
         Author: Andrean Lay
         Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/42e11e98573edf0c5270d0cc33f1cf1bae3d9d49/src/engine.py#L23
@@ -330,9 +324,7 @@ class _SimplifiedTetrisEngine(object):
         return False
 
     def _hard_drop(self) -> None:
-        """
-        Find the position to place the piece (the anchor) by hard dropping the current piece.
-        """
+        """Find the position to place the piece (the anchor) by hard dropping the current piece."""
         while True:
             # Keep going until current piece occupies a full cell, then backtrack once.
             if not self._is_illegal():
@@ -342,8 +334,7 @@ class _SimplifiedTetrisEngine(object):
                 break
 
     def _clear_rows(self) -> int:
-        """
-        Remove blocks from every full row.
+        """Remove blocks from every full row.
 
         Author: Andrean Lay
         Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/42e11e98573edf0c5270d0cc33f1cf1bae3d9d49/src/engine.py#L83
@@ -377,8 +368,7 @@ class _SimplifiedTetrisEngine(object):
         return num_rows_cleared
 
     def _update_grid(self, set_piece: bool, /) -> None:
-        """
-        Set the current piece using the anchor.
+        """Set the current piece using the anchor.
 
         :param set_piece: whether to set the piece.
         """
@@ -407,8 +397,7 @@ class _SimplifiedTetrisEngine(object):
         )
 
     def _get_reward(self) -> Tuple[float, int]:
-        """
-        Return the reward, which is the number of rows cleared.
+        """Return the reward, which is the number of rows cleared.
 
         :return: the reward and the number of rows cleared.
         """
@@ -423,8 +412,7 @@ class _SimplifiedTetrisEngine(object):
             self._all_available_actions[idx] = self._compute_available_actions()
 
     def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
-        """
-        Compute the actions available with the current piece.
+        """Compute the actions available with the current piece.
 
         Author: Andrean Lay
         Source: https://github.com/andreanlay/tetris-ai-deep-reinforcement-learning/blob/42e11e98573edf0c5270d0cc33f1cf1bae3d9d49/src/engine.py#L196
@@ -443,7 +431,6 @@ class _SimplifiedTetrisEngine(object):
             for translation in range(abs(min_x_coord), self._width - max_x_coord):
 
                 if count == self._num_actions:
-
                     return available_actions
 
                 self._anchor = [translation, 0]
@@ -454,12 +441,10 @@ class _SimplifiedTetrisEngine(object):
                 self._update_grid(False)
 
                 count += 1
-
         return available_actions
 
     def _get_dellacherie_scores(self) -> np.array:
-        """
-        Get the Dellacherie feature values.
+        """Compute and return the Dellacherie feature values.
 
         :return: a list of the Dellacherie feature values.
         """
@@ -492,14 +477,11 @@ class _SimplifiedTetrisEngine(object):
         max_indices = np.argwhere(ratings == np.amax(ratings)).flatten()
 
         if len(max_indices) == 1:
-
             return ratings
-
         return self._get_priorities(max_indices)
 
     def _get_priorities(self, max_indices: np.array, /) -> np.array:
-        """
-        Calculate the priorities of the available actions.
+        """Compute and return the priorities of the available actions.
 
         :param max_indices: the actions with the maximum ratings.
         :return: the priorities.
@@ -522,8 +504,7 @@ class _SimplifiedTetrisEngine(object):
         return priorities
 
     def _get_dellacherie_funcs(self) -> list:
-        """
-        Get the Dellacherie feature functions.
+        """Return the Dellacherie feature functions.
 
         :return: a list of the Dellacherie feature functions.
         """
@@ -537,8 +518,9 @@ class _SimplifiedTetrisEngine(object):
         ]
 
     def _get_landing_height(self) -> int:
-        """
-        Get the landing height. Landing height = the midpoint of the last piece to be placed.
+        """Compute the landing height and return it.
+
+        Landing height = the midpoint of the last piece to be placed.
 
         :return: landing height.
         """
@@ -549,8 +531,7 @@ class _SimplifiedTetrisEngine(object):
         )
 
     def _get_eroded_cells(self) -> int:
-        """
-        Return the eroded cells value. Num. eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
+        """Return the eroded cells value. Num. eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
 
         :return: eroded cells.
         """
@@ -562,8 +543,9 @@ class _SimplifiedTetrisEngine(object):
         return 0
 
     def _get_row_transitions(self) -> float:
-        """
-        Return the row transitions value. Row transitions = Number of transitions from empty to full cells (or vice versa), examining each row one at a time.
+        """Return the row transitions value.
+
+        Row transitions = Number of transitions from empty to full cells (or vice versa), examining each row one at a time.
 
         Author: Ben Schofield
         Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L45
@@ -577,8 +559,9 @@ class _SimplifiedTetrisEngine(object):
         return np.diff(grid.T).sum()
 
     def _get_column_transitions(self) -> float:
-        """
-        Return the column transitions value. Column transitions = Number of transitions from empty to full (or vice versa), examining each column one at a time.
+        """Return the column transitions value.
+
+        Column transitions = Number of transitions from empty to full (or vice versa), examining each column one at a time.
 
         Author: Ben Schofield
         Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L60
@@ -592,8 +575,7 @@ class _SimplifiedTetrisEngine(object):
         return np.diff(grid).sum()
 
     def _get_holes(self) -> int:
-        """
-        Computes the number of holes present in the current grid and returns it.
+        """Compute the number of holes present in the current grid and return it.
 
         A hole is an empty cell with at least one full cell above it in the same column.
 
@@ -602,8 +584,7 @@ class _SimplifiedTetrisEngine(object):
         return np.count_nonzero((self._grid).cumsum(axis=1) * ~self._grid)
 
     def _get_cumulative_wells(self) -> int:
-        """
-        Compute the cumulative wells value and returns it.
+        """Compute the cumulative wells value and return it.
 
         Cumulative wells is defined here:
         https://arxiv.org/abs/1905.01652.  For each well, find the depth of
@@ -641,7 +622,7 @@ class _SimplifiedTetrisEngine(object):
         return cumulative_wells
 
     def _rotate_piece(self, rotation: int, /) -> None:
-        """Sets the piece's rotation and rotates the current piece.
+        """Set the piece's rotation and rotate the current piece.
 
         :param rotation: piece's rotation.
         """
@@ -649,8 +630,7 @@ class _SimplifiedTetrisEngine(object):
         self._piece._coords = self._piece._all_coords[self._piece._rotation]
 
     def _get_translation_rotation(self, action: int, /) -> Tuple[int, int]:
-        """
-        Returns the translation and rotation corresponding to action.
+        """Return the translation and rotation corresponding to action.
 
         :param action: action.
 

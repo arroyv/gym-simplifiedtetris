@@ -1,7 +1,7 @@
 """Contains a Q-learning agent class.
 """
 
-from typing import Optional, Sequence
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -13,13 +13,11 @@ class QLearningAgent(object):
     :attr alpha: learning rate parameter.
     :attr gamma: discount rate parameter.
     :attr _q_table: table of state-action values.
-    :attr _num_actions: number of actions available from each state.
     """
 
     def __init__(
         self,
-        *,
-        grid_dims: Sequence[int],
+        grid_dims: Union[Tuple[int, int], List[int]],
         num_pieces: int,
         num_actions: int,
         alpha: Optional[float] = 0.2,
@@ -39,24 +37,23 @@ class QLearningAgent(object):
         self.alpha = alpha
         self.gamma = gamma
 
-        q_table_dims = [2 for _ in range(grid_dims[0] * grid_dims[1])]
-        q_table_dims += [num_pieces] + [num_actions]
+        q_table_dims = [2 for dim_num in range(grid_dims[0] * grid_dims[1])]
+        q_table_dims.extend([num_pieces, num_actions])
         self._q_table = np.zeros((q_table_dims), dtype="double")
 
-        self._num_actions = num_actions
-
     def predict(self, obs: np.ndarray, /) -> int:
-        """Returns an action whilst following an epsilon-greedy policy.
+        """Return an action whilst following an epsilon-greedy policy.
 
-        :param obs: observations given to the agent by the env.
+        :param obs: observation.
 
-        :return: action chosen by the Q-learning agent.
+        :return: action.
         """
         # Choose an action at random with probability epsilon.
         if np.random.rand(1)[0] <= self.epsilon:
-            return np.random.choice(self._num_actions)
+            num_actions = self._q_table.shape[-1]
+            return np.random.choice(num_actions)
 
-        # Choose greedily from the set of all actions.
+        # Choose greedily from the available actions.
         return np.argmax(self._q_table[tuple(obs)])
 
     def learn(
@@ -69,10 +66,10 @@ class QLearningAgent(object):
         :param next_obs: next observation given to the agent by the env having taken action.
         :param action: action taken that generated next_obs.
         """
-        _obs_action = tuple(list(obs) + [action])
+        _obs_action_pair = tuple(list(obs) + [action])
         max_q_value = np.max(self._q_table[tuple(next_obs)])
 
         # Update the Q-table using the stored Q-value.
-        self._q_table[_obs_action] += self.alpha * (
-            reward + self.gamma * max_q_value - self._q_table[_obs_action]
+        self._q_table[_obs_action_pair] += self.alpha * (
+            reward + self.gamma * max_q_value - self._q_table[_obs_action_pair]
         )

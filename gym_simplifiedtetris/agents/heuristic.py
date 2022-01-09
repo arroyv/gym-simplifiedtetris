@@ -9,7 +9,7 @@ class HeuristicAgent(object):
 
     @staticmethod
     def predict(scores: np.ndarray, /) -> int:
-        """Returns the action yielding the largest heuristic score.
+        """Return the action yielding the largest heuristic score.
 
         Ties are separated using a priority rating, which is based on the translation and rotation.
 

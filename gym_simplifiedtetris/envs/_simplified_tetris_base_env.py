@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Dict, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import gym
 import numpy as np
@@ -35,7 +35,11 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         raise NotImplementedError()
 
     def __init__(
-        self, *, grid_dims: Sequence[int], piece_size: int, seed: Optional[int] = 8191
+        self,
+        *,
+        grid_dims: Union[Tuple[int, int], List[int]],
+        piece_size: int,
+        seed: Optional[int] = 8191,
     ) -> None:
         """Constructor.
 
@@ -53,10 +57,10 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
         if len(grid_dims) != 2:
             raise IndexError(
-                "Inappropriate format provided for grid_dims. It should be a sequence of length 2 containing integers."
+                "Inappropriate format provided for grid_dims. It should be a tuple/list of length 2 containing integers."
             )
 
-        if [grid_dims[0], grid_dims[1]] not in [
+        if list[grid_dims] not in [
             [20, 10],
             [10, 10],
             [8, 6],
@@ -101,7 +105,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         return self._get_obs()
 
     def step(self, action: int, /) -> Tuple[np.ndarray, float, bool, Dict[str, Any]]:
-        """Steps the env.
+        """Step the env.
 
         Hard drop the current piece according to the action. Terminate the
         game if the piece cannot fit into the bottom 'height-piece_size' rows.

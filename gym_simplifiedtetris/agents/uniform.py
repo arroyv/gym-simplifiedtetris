@@ -18,7 +18,7 @@ class UniformAgent(object):
         self._num_actions = num_actions
 
     def predict(self) -> int:
-        """Selects an action uniformly at random.
+        """Select an action uniformly at random.
 
         :return: action chosen by the agent.
         """
