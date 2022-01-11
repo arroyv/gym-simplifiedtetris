@@ -1,4 +1,5 @@
-"""Contains a potential-based shaping reward class."""
+"""Contains a potential-based shaping reward class.
+"""
 
 from typing import Tuple
 
@@ -6,7 +7,7 @@ import numpy as np
 
 
 class _PotentialBasedShapingReward(object):
-    """A potential-based shaping reward based on the number of holes in the Tetris grid.
+    """A potential-based shaping reward based on the feature holes.
 
     :attr _heuristic_range: min and max heuristic values seen so far.
     :attr _old_potential: previous potential.
@@ -22,10 +23,11 @@ class _PotentialBasedShapingReward(object):
         """Constructor."""
         # Setting the range in this way ensures that the min and max are definitely updated the first time the method "_update_range" is called.
         self._heuristic_range = {"min": 1000, "max": -1}
+
         self._old_potential = self._INITIAL_POTENTIAL
 
     def _get_reward(self) -> Tuple[float, int]:
-        """Override superclass method and return the potential-based shaping reward.
+        """Override the superclass method and return the potential-based shaping reward.
 
         :return: potential-based shaping reward and the number of lines cleared.
         """
@@ -43,7 +45,6 @@ class _PotentialBasedShapingReward(object):
         )
         shaping_reward = (new_potential - self._old_potential) + num_lines_cleared
         self._old_potential = new_potential
-
         return shaping_reward, num_lines_cleared
 
     def _get_terminal_reward(self) -> float:
@@ -53,7 +54,6 @@ class _PotentialBasedShapingReward(object):
         """
         terminal_shaping_reward = -self._old_potential
         self._old_potential = self._INITIAL_POTENTIAL
-
         return terminal_shaping_reward
 
     def _update_range(self, heuristic_value: int) -> None:

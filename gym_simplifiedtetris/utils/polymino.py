@@ -16,7 +16,13 @@ _MONOMINOS: PiecesInfo = dict()
 _MONOMINOS[0] = {"coords": {0: [(0, 0)]}, "name": "O"}
 
 _DOMINOS: PiecesInfo = dict()
-_DOMINOS[0] = {"coords": {0: [(0, 0), (0, -1)], 90: [(0, 0), (1, 0)]}, "name": "I"}
+_DOMINOS[0] = {
+    "coords": {
+        0: [(0, 0), (0, -1)],
+        90: [(0, 0), (1, 0)],
+    },
+    "name": "I",
+}
 
 _TROMINOS: PiecesInfo = dict()
 _TROMINOS[0] = {

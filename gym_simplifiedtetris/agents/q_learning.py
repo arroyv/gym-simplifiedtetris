@@ -1,7 +1,7 @@
 """Contains a Q-learning agent class.
 """
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Tuple, Union
 
 import numpy as np
 
@@ -20,9 +20,9 @@ class QLearningAgent(object):
         grid_dims: Union[Tuple[int, int], List[int]],
         num_pieces: int,
         num_actions: int,
-        alpha: Optional[float] = 0.2,
-        gamma: Optional[float] = 0.99,
-        epsilon: Optional[float] = 1.0,
+        alpha: float = 0.2,
+        gamma: float = 0.99,
+        epsilon: float = 1.0,
     ):
         """Constructor.
 
@@ -37,7 +37,7 @@ class QLearningAgent(object):
         self.alpha = alpha
         self.gamma = gamma
 
-        q_table_dims = [2 for dim_num in range(grid_dims[0] * grid_dims[1])]
+        q_table_dims = [2 for _ in range(grid_dims[0] * grid_dims[1])]
         q_table_dims.extend([num_pieces, num_actions])
         self._q_table = np.zeros((q_table_dims), dtype="double")
 
@@ -57,7 +57,11 @@ class QLearningAgent(object):
         return np.argmax(self._q_table[tuple(obs)])
 
     def learn(
-        self, reward: float, obs: np.ndarray, next_obs: np.ndarray, action: int
+        self,
+        reward: float,
+        obs: np.ndarray,
+        next_obs: np.ndarray,
+        action: int,
     ) -> None:
         """Update the Q-learning agent's Q-table.
 
@@ -66,10 +70,12 @@ class QLearningAgent(object):
         :param next_obs: next observation given to the agent by the env having taken action.
         :param action: action taken that generated next_obs.
         """
-        _obs_action_pair = tuple(list(obs) + [action])
+        obs_action = list(obs)
+        obs_action.append(action)
+        obs_action = tuple(obs)
+
         max_q_value = np.max(self._q_table[tuple(next_obs)])
 
-        # Update the Q-table using the stored Q-value.
-        self._q_table[_obs_action_pair] += self.alpha * (
-            reward + self.gamma * max_q_value - self._q_table[_obs_action_pair]
+        self._q_table[obs_action] += self.alpha * (
+            reward + self.gamma * max_q_value - self._q_table[obs_action]
         )

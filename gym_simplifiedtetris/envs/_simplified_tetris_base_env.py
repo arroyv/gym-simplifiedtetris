@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import gym
 import numpy as np
@@ -34,12 +34,20 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
     def observation_space(self):
         raise NotImplementedError()
 
+    @property
+    def num_actions(self) -> int:
+        return self._num_actions_
+
+    @property
+    def num_pieces(self) -> int:
+        return self._num_pieces_
+
     def __init__(
         self,
         *,
         grid_dims: Union[Tuple[int, int], List[int]],
         piece_size: int,
-        seed: Optional[int] = 8191,
+        seed: int = 8191,
     ) -> None:
         """Constructor.
 
@@ -60,7 +68,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
                 "Inappropriate format provided for grid_dims. It should be a tuple/list of length 2 containing integers."
             )
 
-        if list[grid_dims] not in [
+        if list(grid_dims) not in [
             [20, 10],
             [10, 10],
             [8, 6],
@@ -138,13 +146,14 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         reward, num_rows_cleared = self._get_reward()
         self._engine._score += num_rows_cleared
 
-        self._engine._update_coords_and_anchor()
+        self._engine._update_anchor()
+        self._engine._get_new_piece()
 
         info["num_rows_cleared"] = num_rows_cleared
 
         return self._get_obs(), reward, False, info
 
-    def render(self, mode: Optional[str] = "human", /) -> np.ndarray:
+    def render(self, mode: str = "human", /) -> np.ndarray:
         """Render the env.
 
         :param mode: render mode.
@@ -157,7 +166,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         """Close the open windows."""
         return self._engine._close()
 
-    def _seed(self, seed: Optional[int] = 8191, /) -> None:
+    def _seed(self, seed: int = 8191, /) -> None:
         """Seed the env.
 
         :param seed: optional seed to seed the rng with.

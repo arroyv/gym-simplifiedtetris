@@ -25,7 +25,10 @@ class SimplifiedTetrisPartBinaryEnv(_SimplifiedTetrisBaseEnv):
 
         :return: Box obs space.
         """
-        low = np.append(np.zeros(self._width_ * (self._height_ - self._piece_size_)), 0)
+        low = np.append(
+            np.zeros(self._width_ * (self._height_ - self._piece_size_)),
+            0,
+        )
         high = np.append(
             np.ones(self._width_ * (self._height_ - self._piece_size_)),
             self._num_pieces_ - 1,

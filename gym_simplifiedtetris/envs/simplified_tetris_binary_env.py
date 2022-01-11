@@ -1,4 +1,4 @@
-"""Contains a simplified Tetris env class with a binary obs space.
+"""Contains a simplified Tetris env class.
 """
 
 import numpy as np
@@ -14,9 +14,9 @@ class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
 
     The observation space is the grid's binary representation, plus the current piece's id.
 
-    :param grid_dims: the grid dimensions.
-    :param piece_size: the size of every piece.
-    :param seed: the rng seed.
+    :param grid_dims: dimensions of the Tetris grid.
+    :param piece_size: size of each piece in use.
+    :param seed: random number generator seed.
     """
 
     @property
@@ -26,7 +26,10 @@ class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
         :return: Box obs space.
         """
         low = np.append(np.zeros(self._width_ * self._height_), 0)
-        high = np.append(np.ones(self._width_ * self._height_), self._num_pieces_ - 1)
+        high = np.append(
+            np.ones(self._width_ * self._height_),
+            self._num_pieces_ - 1,
+        )
         return spaces.Box(
             low=low,
             high=high,
@@ -34,7 +37,7 @@ class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
         )
 
     def _get_obs(self) -> np.ndarray:
-        """Returns a flattened NumPy array containing the grid's binary representation, plus the current piece's id.
+        """Return the grid's binary representation, plus the current piece's id.
 
         Overrides the superclass method.
 
