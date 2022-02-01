@@ -10,7 +10,7 @@ class UniformAgent(object):
     :attr _num_actions: the number of actions available to the agent in each state.
     """
 
-    def __init__(self, num_actions: int, /) -> None:
+    def __init__(self, num_actions: int) -> None:
         """Initialise the object.
 
         :param num_actions: number of actions available to the agent in each state.

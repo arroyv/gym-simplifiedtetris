@@ -41,7 +41,7 @@ class QLearningAgent(object):
         q_table_dims.extend([num_pieces, num_actions])
         self._q_table = np.zeros((q_table_dims), dtype="double")
 
-    def predict(self, obs: np.ndarray, /) -> int:
+    def predict(self, obs: np.ndarray) -> int:
         """Return an action whilst following an epsilon-greedy policy.
 
         :param obs: observation.

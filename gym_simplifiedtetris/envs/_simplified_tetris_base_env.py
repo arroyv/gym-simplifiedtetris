@@ -98,12 +98,12 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         :return: current obs.
         """
         self._engine._reset()
-        return self._get_obs()
+        obs = self._get_obs()
+        return obs
 
     def step(
         self,
         action: int,
-        /,
     ) -> Tuple[np.ndarray, float, bool, Dict[str, Any]]:
         """Step the env.
 
@@ -145,7 +145,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
         return self._get_obs(), reward, False, info
 
-    def render(self, mode: str = "human", /) -> np.ndarray:
+    def render(self, mode: str = "human") -> np.ndarray:
         """Render the env.
 
         :param mode: render mode.
@@ -158,7 +158,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         """Close the open windows."""
         return self._engine._close()
 
-    def _seed(self, seed: int = 8191, /) -> None:
+    def _seed(self, seed: int = 8191) -> None:
         """Seed the env.
 
         :param seed: optional seed to seed the rng with.

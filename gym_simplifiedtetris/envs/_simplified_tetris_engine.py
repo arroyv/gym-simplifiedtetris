@@ -80,7 +80,6 @@ class _SimplifiedTetrisEngine(object):
         img: np.ndarray,
         all_items: Iterable[Iterable[str]],
         x_offsets: Iterable[int],
-        /,
     ) -> None:
         """Add statistics to the array provided.
 
@@ -159,7 +158,7 @@ class _SimplifiedTetrisEngine(object):
         self._update_anchor()
         self._get_new_piece()
 
-    def _render(self, mode: str = "human", /) -> np.ndarray:
+    def _render(self, mode: str = "human") -> np.ndarray:
         """Show an image of the current grid, having dropped the current piece.
         The human has the option to pause (SPACEBAR), speed up (RIGHT key),
         slow down (LEFT key) or quit (ESC) the window.
@@ -246,7 +245,7 @@ class _SimplifiedTetrisEngine(object):
         ]
         return np.array(grid)
 
-    def _resize_grid(self, grid: np.ndarray, /) -> None:
+    def _resize_grid(self, grid: np.ndarray) -> None:
         """Reshape the grid, convert it to an Image and resize it.
 
         :param grid: the grid to be resized.
@@ -380,7 +379,7 @@ class _SimplifiedTetrisEngine(object):
 
         return num_rows_cleared
 
-    def _update_grid(self, set_piece: bool, /) -> None:
+    def _update_grid(self, set_piece: bool) -> None:
         """Either set the current piece or remove the last piece from the grid.
 
         :param set_piece: whether to set the piece.
@@ -496,7 +495,7 @@ class _SimplifiedTetrisEngine(object):
 
         return ratings if len(max_idx) == 1 else self._get_priorities(max_idx)
 
-    def _get_priorities(self, max_indices: np.array, /) -> np.array:
+    def _get_priorities(self, max_indices: np.array) -> np.array:
         """Compute and return the priorities of the available actions.
 
         :param max_indices: actions with the maximum ratings.
@@ -638,7 +637,7 @@ class _SimplifiedTetrisEngine(object):
 
         return cumulative_wells
 
-    def _rotate_piece(self, rotation: int, /) -> None:
+    def _rotate_piece(self, rotation: int) -> None:
         """Set the piece's rotation and rotate the current piece.
 
         :param rotation: piece's rotation.
@@ -646,7 +645,7 @@ class _SimplifiedTetrisEngine(object):
         self._piece._rotation = rotation
         self._piece._coords = self._piece._all_coords[self._piece._rotation]
 
-    def _get_translation_rotation(self, action: int, /) -> Tuple[int, int]:
+    def _get_translation_rotation(self, action: int) -> Tuple[int, int]:
         """Return the translation and rotation corresponding to action.
 
         :param action: action.
