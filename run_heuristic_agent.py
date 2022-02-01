@@ -9,7 +9,7 @@ from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 def main() -> None:
     """Evaluate an agent that selects action according to a heuristic."""
-    num_episodes = 30
+    num_episodes = 10
     episode_num = 0
     ep_returns = np.zeros(num_episodes)
 

@@ -1,5 +1,7 @@
-"""Contains a simplified Tetris env with a binary obs space and a shaped reward function.
+"""Contains a simplified Tetris env, which a binary obs space and a shaped reward function.
 """
+
+from typing import Any
 
 from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (
     SimplifiedTetrisBinaryEnv,
@@ -17,8 +19,8 @@ class SimplifiedTetrisBinaryShapedEnv(
     The reward function is a potential-based shaping reward and the observation space is the grid's binary representation plus the current piece's id.
     """
 
-    def __init__(self, **kwargs) -> None:
-        """Constructor."""
+    def __init__(self, **kwargs: Any) -> None:
+        """Initialise the object."""
         super().__init__()
         SimplifiedTetrisBinaryEnv.__init__(self, **kwargs)
 

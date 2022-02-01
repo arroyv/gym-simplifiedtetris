@@ -1,6 +1,8 @@
 """Contains a simplified Tetris env with a part-binary obs space and shaping reward function.
 """
 
+from typing import Any
+
 from gym_simplifiedtetris.envs.reward_shaping._potential_based_shaping_reward import (
     _PotentialBasedShapingReward,
 )
@@ -18,8 +20,8 @@ class SimplifiedTetrisPartBinaryShapedEnv(
     The reward function is a scaled heuristic score and the obs space is the grid's part binary representation plus the current piece's id.
     """
 
-    def __init__(self, **kwargs) -> None:
-        """Constructor."""
+    def __init__(self, **kwargs: Any) -> None:
+        """Initialise the object."""
         super().__init__()
         SimplifiedTetrisPartBinaryEnv.__init__(self, **kwargs)
 

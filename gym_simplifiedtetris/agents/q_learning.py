@@ -24,7 +24,7 @@ class QLearningAgent(object):
         gamma: float = 0.99,
         epsilon: float = 1.0,
     ):
-        """Constructor.
+        """Initialise the object.
 
         :param grid_dims: grid dimensions.
         :param num_pieces: number of pieces in use.

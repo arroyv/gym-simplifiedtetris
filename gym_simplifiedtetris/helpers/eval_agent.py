@@ -10,9 +10,12 @@ from tqdm import tqdm
 
 
 def eval_agent(
-    agent: QLearningAgent, env: gym.Env, num_episodes: int, render: bool
+    agent: QLearningAgent,
+    env: gym.Env,
+    num_episodes: int,
+    render: bool,
 ) -> Tuple[float, float]:
-    """Evaluates the agent's performance and returns the mean score and standard deviation.
+    """Evaluate the agent's performance and return the mean score and standard deviation.
 
     :param agent: agent to evaluate on the env.
     :param env: agent will be evaluated on this env.

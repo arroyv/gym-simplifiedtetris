@@ -3,31 +3,23 @@ from typing import Any, Dict, List, Tuple, Union
 
 import gym
 import numpy as np
-from gym import spaces
-from gym.utils import seeding
 
 from ._simplified_tetris_engine import _SimplifiedTetrisEngine
 
 
 class _SimplifiedTetrisBaseEnv(gym.Env):
-    """A base simplified Tetris environment.
+    """A simplified Tetris base environment.
 
-    Ensures that all custom envs inherit from gym.Env and implement the required methods and spaces.
-
-    :attr _height_: height of the grid.
-    :attr _width_: width of the grid.
-    :attr _num_actions_: number of actions available in each state.
-    :attr _num_pieces_: number of pieces available.
-    :attr _np_random: rng.
-    :attr _engine: _SimplifiedTetrisEngine instance.
+    This class ensures that all custom envs inherit from gym.Env and implement
+    the required methods and spaces.
     """
 
     metadata = {"render.modes": ["human", "rgb_array"]}
     reward_range = (0, 4)
 
     @property
-    def action_space(self) -> spaces.Discrete:
-        return spaces.Discrete(self._num_actions_)
+    def action_space(self) -> gym.spaces.Discrete:
+        return gym.spaces.Discrete(self._num_actions_)
 
     @property
     @abstractmethod
@@ -42,6 +34,17 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
     def num_pieces(self) -> int:
         return self._num_pieces_
 
+    @property
+    def piece_size(self):
+        """Size of the pieces in use."""
+        return self._piece_size_
+
+    @piece_size.setter
+    def piece_size(self, value: int):
+        if value not in [1, 2, 3, 4]:
+            raise ValueError("piece_size should be either 1, 2, 3, or 4.")
+        self._piece_size_ = value
+
     def __init__(
         self,
         *,
@@ -49,37 +52,22 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         piece_size: int,
         seed: int = 8191,
     ) -> None:
-        """Constructor.
+        """Initialise the object.
 
         :param grid_dims: grid dimensions.
         :param piece_size: size of every piece.
         :param seed: rng seed.
         """
-        if piece_size not in [
-            1,
-            2,
-            3,
-            4,
-        ]:
-            raise ValueError("piece_size should be either 1, 2, 3, or 4.")
-
         if len(grid_dims) != 2:
             raise IndexError(
                 "Inappropriate format provided for grid_dims. It should be a tuple/list of length 2 containing integers."
             )
-
-        if list(grid_dims) not in [
-            [20, 10],
-            [10, 10],
-            [8, 6],
-            [7, 4],
-        ]:
+        if list(grid_dims) not in [[20, 10], [10, 10], [8, 6], [7, 4]]:
             raise ValueError(
                 f"Grid dimensions must be one of (20, 10), (10, 10), (8, 6), or (7, 4)."
             )
-
         self._height_, self._width_ = grid_dims
-        self._piece_size_ = piece_size
+        self.piece_size = piece_size
 
         self._num_actions_, self._num_pieces_ = {
             1: (grid_dims[1], 1),
@@ -112,11 +100,15 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         self._engine._reset()
         return self._get_obs()
 
-    def step(self, action: int, /) -> Tuple[np.ndarray, float, bool, Dict[str, Any]]:
+    def step(
+        self,
+        action: int,
+        /,
+    ) -> Tuple[np.ndarray, float, bool, Dict[str, Any]]:
         """Step the env.
 
         Hard drop the current piece according to the action. Terminate the
-        game if the piece cannot fit into the bottom 'height-piece_size' rows.
+        game if the piece cannot fit into the bottom |height-piece_size| rows.
         Otherwise, select a new piece and reset the anchor.
 
         :param action: action to be taken.
@@ -171,7 +163,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
         :param seed: optional seed to seed the rng with.
         """
-        self._np_random, _ = seeding.np_random(seed)
+        self._np_random, _ = gym.utils.seeding.np_random(seed)
 
     def _get_reward(self) -> Tuple[float, int]:
         """Return the reward.

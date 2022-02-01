@@ -11,7 +11,7 @@ class UniformAgent(object):
     """
 
     def __init__(self, num_actions: int, /) -> None:
-        """Constructor.
+        """Initialise the object.
 
         :param num_actions: number of actions available to the agent in each state.
         """

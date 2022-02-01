@@ -13,10 +13,6 @@ class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
     """A custom Gym env for Tetris.
 
     The observation space is the grid's binary representation, plus the current piece's id.
-
-    :param grid_dims: dimensions of the Tetris grid.
-    :param piece_size: size of each piece in use.
-    :param seed: random number generator seed.
     """
 
     @property

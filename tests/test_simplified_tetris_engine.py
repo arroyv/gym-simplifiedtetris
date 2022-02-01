@@ -123,8 +123,8 @@ class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
         self.engine._update_grid(False)
         np.testing.assert_array_equal(self.engine._grid, grid_to_compare)
 
-    def test__get_all_available_actions(self) -> None:
-        self.engine._get_all_available_actions()
+    def test__compute_all_available_actions(self) -> None:
+        self.engine._compute_all_available_actions()
         for value in self.engine._all_available_actions.values():
             self.assertEqual(self.engine._num_actions, len(value))
 

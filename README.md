@@ -110,9 +110,12 @@ env = Tetris(grid_dims=(20, 10), piece_size=4)
 
 ## 3. Future work
 
-- Normalise the observation spaces
-- Implement an action space that only permits the agent to take non-terminal actions
+- Normalise the observation spaces.
+- Implement an action space that only permits the agent to take non-terminal actions.
 - Implement more shaping rewards: potential-style, potential-based, dynamic potential-based, and non-potential. Optimise their weights using an optimisation algorithm.
+- Write end-to-end and integration tests using pytest.
+- Perform mutation and property-based testing using mutmut and Hypothesis.
+- Use Coverage.py to increase code coverage.
 
 ## 4. Acknowledgements
 

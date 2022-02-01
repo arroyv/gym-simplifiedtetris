@@ -4,7 +4,7 @@
 import random
 import time
 from copy import deepcopy
-from typing import Dict, Iterable, List, Optional, Tuple, Union
+from typing import Dict, Iterable, List, Tuple, Union
 
 import cv2.cv2 as cv
 import numpy as np
@@ -39,7 +39,7 @@ class _SimplifiedTetrisEngine(object):
     > _clear_rows
     > _update_grid
     > _get_reward
-    > _get_all_available_actions
+    > _compute_all_available_actions
     > _compute_available_actions
 
     Methods related to the heuristic agent:
@@ -53,8 +53,6 @@ class _SimplifiedTetrisEngine(object):
     > _get_holes
     > _get_cumulative_wells
 
-    TODO
-    :attr:
     """
 
     CELL_SIZE = 50
@@ -79,7 +77,10 @@ class _SimplifiedTetrisEngine(object):
 
     @staticmethod
     def _add_statistics(
-        img: np.ndarray, all_items: Iterable[Iterable[str]], x_offsets: Iterable[int], /
+        img: np.ndarray,
+        all_items: Iterable[Iterable[str]],
+        x_offsets: Iterable[int],
+        /,
     ) -> None:
         """Add statistics to the array provided.
 
@@ -107,7 +108,7 @@ class _SimplifiedTetrisEngine(object):
         num_pieces: int,
         num_actions: int,
     ) -> None:
-        """Constructor.
+        """Initialise the object.
 
         :param grid_dims: grid dimensions (height, width).
         :param piece_size: size of each piece in use.
@@ -134,7 +135,7 @@ class _SimplifiedTetrisEngine(object):
         self._initialise_pieces()
         self._update_anchor()
         self._get_new_piece()
-        self._get_all_available_actions()
+        self._compute_all_available_actions()
         self._reset()
 
     def _generate_id_randomly(self) -> int:
@@ -238,7 +239,7 @@ class _SimplifiedTetrisEngine(object):
         """
         grid = [
             [
-                self.BLOCK_COLOURS[self._colour_grid[y_coord][x_coord]]
+                self.BLOCK_COLOURS[self._colour_grid[x_coord][y_coord]]
                 for x_coord in range(self._width)
             ]
             for y_coord in range(self._height)
@@ -416,15 +417,14 @@ class _SimplifiedTetrisEngine(object):
         num_rows_cleared = self._clear_rows()
         return float(num_rows_cleared), num_rows_cleared
 
-    def _get_all_available_actions(self) -> None:
+    def _compute_all_available_actions(self) -> None:
         """Get the actions available for each of the pieces in use."""
-        self._all_available_actions = {}
-        # FIXME
-        for idx, piece in self._pieces.items():
-            self._piece = piece
-            self._all_available_actions[idx] = self._compute_available_actions()
+        self._all_available_actions = {
+            idx: self._compute_available_actions(piece)
+            for (idx, piece) in self._pieces.items()
+        }
 
-    def _compute_available_actions(self) -> Dict[int, Tuple[int, int]]:
+    def _compute_available_actions(self, piece: Polymino) -> Dict[int, Tuple[int, int]]:
         """Compute the actions available with the current piece.
 
         Author: Andrean Lay
@@ -434,6 +434,7 @@ class _SimplifiedTetrisEngine(object):
         """
         available_actions: Dict[int, Tuple[int, int]] = {}
         count = 0
+        self._piece = piece
 
         for rotation in self._piece._all_coords.keys():
             self._rotate_piece(rotation)
