@@ -1,18 +1,18 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 """A script for running a heuristic agent."""
 
 
-import numpy as np
+import sys
 
+sys.path.append("..")
+
+import numpy as np
 from gym_simplifiedtetris.agents import HeuristicAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
 def main() -> None:
-    """Evaluate the agent that selects action according to a heuristic."""
-    num_episodes = 30
+    """Evaluate an agent that selects action according to a heuristic."""
+    num_episodes = 10
     episode_num = 0
     ep_returns = np.zeros(num_episodes)
 

@@ -1,9 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""Two usage examples shown in the README.md file.
+"""
 
-"""
-Two usage examples shown in the README.md file.
-"""
+import sys
+
+sys.path.append("..")
+
+import gym_simplifiedtetris
 
 
 def run_example_1() -> None:

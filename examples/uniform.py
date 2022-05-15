@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 """A script for running a uniform agent on Tetris."""
+
+import sys
+
+sys.path.append("..")
 
 import gym
 import numpy as np
-
 from gym_simplifiedtetris.agents import UniformAgent
 
 
