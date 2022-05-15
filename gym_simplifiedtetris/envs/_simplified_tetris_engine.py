@@ -277,10 +277,9 @@ class _SimplifiedTetrisEngine(object):
             0.0 if len(self._final_scores) == 0 else np.mean(self._final_scores)
         )
 
-        # FIXME
         self._add_statistics(
-            img_array,
-            [
+            img=img_array,
+            all_items=[
                 [
                     "Height",
                     "Width",
@@ -296,7 +295,7 @@ class _SimplifiedTetrisEngine(object):
                     f"{mean_score:.1f}",
                 ],
             ],
-            [50, 300],
+            x_offsets=[50, 300],
         )
         self._img = np.concatenate((img_array, self._img), axis=1)
 
