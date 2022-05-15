@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-x -v --html=report.html --self-contained-html"
+addopts = "-x --html=tests/output/Test_Report.html --self-contained-html"
 testpaths = [
     "tests",
 ]

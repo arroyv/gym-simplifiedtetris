@@ -1,8 +1,11 @@
 """A script for running a heuristic agent."""
 
 
-import numpy as np
+import sys
 
+sys.path.append("..")
+
+import numpy as np
 from gym_simplifiedtetris.agents import HeuristicAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 

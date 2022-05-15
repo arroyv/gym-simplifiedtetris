@@ -13,7 +13,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: MIT License",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Games/Entertainment :: Puzzle Games",
@@ -22,7 +21,7 @@ classifiers = [
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.2.0",
+    version="0.3.0",
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
@@ -30,7 +29,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    python_requires=">=3.8",
+    python_requires=">=3.8, <3.10",
     packages=find_packages(where="gym_simplifiedtetris"),
     install_requires=install_requires,
     classifiers=classifiers,

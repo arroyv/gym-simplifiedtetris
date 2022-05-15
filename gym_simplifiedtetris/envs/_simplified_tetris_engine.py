@@ -10,7 +10,7 @@ import cv2.cv2 as cv
 import numpy as np
 from PIL import Image
 
-from ..utils import Colours, Polymino
+from ..auxiliary import Colours, Polymino
 
 
 class _SimplifiedTetrisEngine(object):
@@ -176,6 +176,7 @@ class _SimplifiedTetrisEngine(object):
         self._draw_boundary()
 
         if mode == "human":
+
             if self._show_agent_playing:
 
                 """frame_rgb = cv.cvtColor(self._img, cv.COLOR_BGR2RGB)
@@ -333,6 +334,7 @@ class _SimplifiedTetrisEngine(object):
                 or self._grid[x_pos, y_pos] > 0
             ):
                 return True
+
         return False
 
     def _hard_drop(self) -> None:
@@ -393,6 +395,7 @@ class _SimplifiedTetrisEngine(object):
                 piece_x_coord + self._anchor[0],
                 piece_y_coord + self._anchor[1],
             )
+
             if set_piece:
                 self._last_move_info["rows_added_to"][y_coord] += 1
                 self._grid[x_coord, y_coord] = 1

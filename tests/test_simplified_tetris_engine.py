@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""Testing _SimplifiedTetrisEngine."""
 
 import unittest
 
 import numpy as np
+from gym_simplifiedtetris.auxiliary import Polymino
 from gym_simplifiedtetris.envs import _SimplifiedTetrisEngine as Engine
-from gym_simplifiedtetris.utils import Polymino
 
 
 class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):

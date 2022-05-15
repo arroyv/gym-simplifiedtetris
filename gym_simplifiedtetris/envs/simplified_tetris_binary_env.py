@@ -29,7 +29,7 @@ class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
         return spaces.Box(
             low=low,
             high=high,
-            dtype=np.int,
+            dtype=int,
         )
 
     def _get_obs(self) -> np.ndarray:

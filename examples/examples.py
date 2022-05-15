@@ -1,11 +1,16 @@
 """Two usage examples shown in the README.md file.
 """
 
+import sys
+
+sys.path.append("..")
+
+import gym_simplifiedtetris
+
 
 def run_example_1() -> None:
     """Example 1 in the README Usage section."""
     import gym
-
     import gym_simplifiedtetris
 
     env = gym.make("simplifiedtetris-binary-20x10-4-v0")

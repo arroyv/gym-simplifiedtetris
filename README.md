@@ -11,9 +11,9 @@
   <a href="https://pypi.org/">
     <img src="https://img.shields.io/pypi/v/gym-simplifiedtetris?style=for-the-badge">
   </a>
-  <a href="https://pypi.org/project/gym-simplifiedtetris/">
+  <!-- <a href="https://pypi.org/project/gym-simplifiedtetris/">
     <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris?style=for-the-badge">
-  </a>
+  </a> -->
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=darkred&style=for-the-badge">
   </a>
@@ -76,7 +76,7 @@ pip install -r requirements.txt
 
 ## 2. Usage
 
-The file [examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten games. You can create an environment using `gym.make`, supplying the environment's ID as an argument.
+The file [examples/examples.py](https://github.com/OliverOverend/gym-simplifiedtetris/blob/master/examples/examples.py) shows two examples of using an instance of the `simplifiedtetris-binary-20x10-4-v0` environment for ten games. You can create an environment using `gym.make`, supplying the environment's ID as an argument.
 
 ```python
 import gym

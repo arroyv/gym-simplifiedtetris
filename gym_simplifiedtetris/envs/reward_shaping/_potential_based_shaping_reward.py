@@ -63,7 +63,9 @@ class _PotentialBasedShapingReward:
 
         :param heuristic_value: computed heuristic value.
         """
+
         if heuristic_value > self._heuristic_range["max"]:
             self._heuristic_range["max"] = heuristic_value
+
         if heuristic_value < self._heuristic_range["min"]:
             self._heuristic_range["min"] = heuristic_value

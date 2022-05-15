@@ -12,12 +12,15 @@ def register_env(incomplete_id: str, entry_point: str) -> None:
     :param incomplete_id: part of the official environment ID.
     :param entry_point: Python entry point of the environment.
     """
+
     if not incomplete_id.startswith("simplifiedtetris-"):
         raise ValueError('Env ID should start with "simplifiedtetris-".')
+
     if not entry_point.startswith("gym_simplifiedtetris.envs:SimplifiedTetris"):
         raise ValueError(
             'Entry point should start with "gym_simplifiedtetris envs:SimplifiedTetris".'
         )
+
     if not entry_point.endswith("Env"):
         raise ValueError('Entry point should end with "Env".')
 

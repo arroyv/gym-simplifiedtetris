@@ -1,8 +1,6 @@
 """A script for running some tests on the envs."""
 
 
-from typing import List
-
 import gym
 import pytest
 from gym_simplifiedtetris.register import env_list
@@ -32,7 +30,9 @@ def test_envs(env_name: str) -> None:
 
         if num_episodes == 0 and is_first_move:
             is_first_move = False
+
         if done:
             num_episodes += 1
             _ = env.reset()
+
     env.close()

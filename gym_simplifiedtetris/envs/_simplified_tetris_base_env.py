@@ -41,8 +41,10 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
     @piece_size.setter
     def piece_size(self, value: int):
+
         if value not in [1, 2, 3, 4]:
             raise ValueError("piece_size should be either 1, 2, 3, or 4.")
+
         self._piece_size_ = value
 
     def __init__(
@@ -58,14 +60,17 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         :param piece_size: size of every piece.
         :param seed: rng seed.
         """
+
         if len(grid_dims) != 2:
             raise IndexError(
                 "Inappropriate format provided for grid_dims. It should be a tuple/list of length 2 containing integers."
             )
+
         if list(grid_dims) not in [[20, 10], [10, 10], [8, 6], [7, 4]]:
             raise ValueError(
                 f"Grid dimensions must be one of (20, 10), (10, 10), (8, 6), or (7, 4)."
             )
+
         self._height_, self._width_ = grid_dims
         self.piece_size = piece_size
 
