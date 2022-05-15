@@ -11,9 +11,9 @@
   <a href="https://pypi.org/">
     <img src="https://img.shields.io/pypi/v/gym-simplifiedtetris?style=for-the-badge">
   </a>
-  <!-- <a href="https://pypi.org/project/gym-simplifiedtetris/">
-    <img src="https://img.shields.io/pypi/pyversions/gym-simplifiedtetris?style=for-the-badge">
-  </a> -->
+  <a href="https://pypi.org/project/gym-simplifiedtetris/">
+    <img src="https://img.shields.io/pypi/pyversions/gym_simplifiedtetris?style=for-the-badge">
+  </a>
   <a href="/LICENSE.md">
     <img src="https://img.shields.io/github/license/OliverOverend/gym-simplifiedtetris?color=darkred&style=for-the-badge">
   </a>
