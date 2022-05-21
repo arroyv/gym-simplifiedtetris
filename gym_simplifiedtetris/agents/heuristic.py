@@ -1,4 +1,4 @@
-"""Contains a heuristic agent class.
+"""Dellacherie agent.
 """
 
 import numpy as np

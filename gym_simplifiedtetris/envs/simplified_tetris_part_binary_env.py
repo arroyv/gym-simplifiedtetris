@@ -1,4 +1,4 @@
-"""Contains a simplified Tetris env class with a part-binary obs space.
+"""Simplified Tetris env, which has a part-binary obs space.
 """
 
 import numpy as np

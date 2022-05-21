@@ -1,4 +1,4 @@
-"""Contains a uniform agent class.
+"""Uniform agent.
 """
 
 import numpy as np

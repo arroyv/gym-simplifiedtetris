@@ -1,4 +1,4 @@
-"""Contains the Tetris engine class.
+"""Tetris engine.
 """
 
 import random

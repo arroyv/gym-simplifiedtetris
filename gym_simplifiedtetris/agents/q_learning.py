@@ -1,4 +1,4 @@
-"""Contains a Q-learning agent class.
+"""Q-learning agent.
 """
 
 from typing import List, Tuple, Union

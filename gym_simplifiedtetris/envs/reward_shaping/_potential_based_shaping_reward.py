@@ -1,4 +1,6 @@
-"""Contains a class that represents a potential-based shaping reward.
+"""Potential-based shaping reward.
+
+See #30 for a discussion on reward shaping.
 """
 
 from typing import Tuple
@@ -6,7 +8,7 @@ from typing import Tuple
 import numpy as np
 
 
-class _PotentialBasedShapingReward:
+class _PotentialBasedShapingReward(object):
     """A potential-based shaping reward based on the feature, holes.
 
     :attr _heuristic_range: min and max heuristic values seen so far.
@@ -36,8 +38,13 @@ class _PotentialBasedShapingReward:
         :return: potential-based shaping reward and the number of lines cleared.
         """
         num_lines_cleared = self._engine._clear_rows()
+
+        # I chose the potential function to be a function of the well-known holes feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
         heuristic_value = self._engine._get_holes()
+
         self._update_range(heuristic_value)
+
+        # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. I also wanted the agent to frequently receive non-zero rewards (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
         new_potential = np.clip(
             1
             - (heuristic_value - self._heuristic_range["min"])
@@ -45,8 +52,12 @@ class _PotentialBasedShapingReward:
             0,
             1,
         )
+
+        # Notice that gamma was set to 1, which isn't strictly allowed since it should be less than 1 according to Theorem 1 in this paper. I found that the agent rarely received positive rewards using this reward function because the agent was frequently transitioning to states with a lower potential (since it was rarely clearing lines).
         shaping_reward = (new_potential - self._old_potential) + num_lines_cleared
+
         self._old_potential = new_potential
+
         return (shaping_reward, num_lines_cleared)
 
     def _get_terminal_reward(self) -> float:

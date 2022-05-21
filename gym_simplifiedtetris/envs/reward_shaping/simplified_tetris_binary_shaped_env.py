@@ -1,4 +1,4 @@
-"""Contains a simplified Tetris env, which a binary obs space and a shaped reward function.
+"""Simplified Tetris env, which has a binary obs space and a shaped reward function.
 """
 
 from typing import Any
