@@ -606,36 +606,34 @@ class _SimplifiedTetrisEngine(object):
 
         Cumulative wells is defined here:
         https://arxiv.org/abs/1905.01652.  For each well, find the depth of
-        the well, d(w), then calculate the sum from i=1 to d(w) of i.  Lastly,
+        the well, d(w), then calculate the sum of i from i=1 to d(w).  Lastly,
         sum the well sums.  A block is part of a well if the cells directly on
-        either side are full, and the block can be reached from above (there
-        are no full cells directly above it).
+        either side are full and the block can be reached from above (i.e., there are no full cells directly above it).
 
         :return: cumulative wells.
         """
-        cumulative_wells = 0
+        grid_ext = np.ones((self._width + 2, self._height + 1), dtype="bool")
+        grid_ext[1:-1, :1] = False
+        grid_ext[1:-1, 1:] = self._grid[:, : self._height]
 
-        new_grid = np.ones((self._width + 2, self._height + 1), dtype="bool")
-        new_grid[1:-1, :-1] = self._grid
+        potential_wells = (
+            np.roll(grid_ext, 1, axis=0) & np.roll(grid_ext, -1, axis=0) & ~grid_ext
+        )
 
-        for col in range(1, self._width + 1):
+        col_heights = np.zeros(12)
+        col_heights[1:-1] = self._height - np.argmax(self._grid, axis=1)
 
-            depth = 1
-            well_complete = False
+        col_heights = np.where(col_heights == 20, 0, col_heights)
 
-            for row in range(self._height):
+        x = np.linspace(1, self._width + 2, self._width + 2)
+        y = np.linspace(self._height + 1, 1, self._height + 1)
+        _, yv = np.meshgrid(x, y)
 
-                cell_mid = new_grid[col][row]
-                cell_right = new_grid[col + 1][row]
-                cell_left = new_grid[col - 1][row]
+        above_outline = (col_heights.reshape(-1, 1) < yv.T).astype(int)
 
-                if cell_mid >= 1:
-                    well_complete = True
-
-                # Check either side to see if the cells are occupied.
-                if not well_complete and cell_left > 0 and cell_right > 0:
-                    cumulative_wells += depth
-                    depth += 1
+        cumulative_wells = np.sum(
+            np.cumsum(potential_wells, axis=1) * above_outline,
+        )
 
         return cumulative_wells
 
