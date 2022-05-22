@@ -615,24 +615,25 @@ class _SimplifiedTetrisEngine(object):
         :return: cumulative wells value.
         """
         grid_ext = np.ones((self._width + 2, self._height + 1), dtype="bool")
-        grid_ext[1:-1, :1] = False
         grid_ext[1:-1, 1:] = self._grid[:, : self._height]
 
+        # This includes some cells that cannot be reached from above.
         potential_wells = (
             np.roll(grid_ext, 1, axis=0) & np.roll(grid_ext, -1, axis=0) & ~grid_ext
         )
 
-        col_heights = np.zeros(12)
+        col_heights = np.zeros(self._width + 2)
         col_heights[1:-1] = self._height - np.argmax(self._grid, axis=1)
-
-        col_heights = np.where(col_heights == 20, 0, col_heights)
+        col_heights = np.where(col_heights == self._height, 0, col_heights)
 
         x = np.linspace(1, self._width + 2, self._width + 2)
         y = np.linspace(self._height + 1, 1, self._height + 1)
         _, yv = np.meshgrid(x, y)
 
+        # A cell that is part of a well must be above the playfield's outline, which consists of the highest full cells in each column.
         above_outline = (col_heights.reshape(-1, 1) < yv.T).astype(int)
 
+        # Exclude the cells that cannot be reached from above by multiplying by 'above_outline'.
         cumulative_wells = np.sum(
             np.cumsum(potential_wells, axis=1) * above_outline,
         )
