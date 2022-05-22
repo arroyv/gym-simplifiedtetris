@@ -143,3 +143,4 @@ tests/output/Test_Report.html
 .vscode
 typings
 tox.ini
+cumulative_wells.py
