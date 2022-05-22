@@ -610,7 +610,9 @@ class _SimplifiedTetrisEngine(object):
         sum the well sums.  A block is part of a well if the cells directly on
         either side are full and the block can be reached from above (i.e., there are no full cells directly above it).
 
-        :return: cumulative wells.
+        Attribution: Ben Schofield
+
+        :return: cumulative wells value.
         """
         grid_ext = np.ones((self._width + 2, self._height + 1), dtype="bool")
         grid_ext[1:-1, :1] = False
