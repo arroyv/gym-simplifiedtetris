@@ -1,9 +1,10 @@
 """Two usage examples shown in the README.md file.
 """
 
+import os
 import sys
 
-sys.path.append("..")
+sys.path.append(os.getcwd())
 
 import gym_simplifiedtetris
 

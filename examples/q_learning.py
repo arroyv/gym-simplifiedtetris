@@ -1,8 +1,9 @@
 """A script for running training and evaluating a Q-learning agent."""
 
+import os
 import sys
 
-sys.path.append("..")
+sys.path.append(os.getcwd())
 
 from typing import Tuple
 

@@ -1,8 +1,9 @@
 """A script for running a uniform agent on Tetris."""
 
+import os
 import sys
 
-sys.path.append("..")
+sys.path.append(os.getcwd())
 
 import gym
 import numpy as np

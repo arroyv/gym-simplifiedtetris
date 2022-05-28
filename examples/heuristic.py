@@ -1,9 +1,9 @@
 """A script for running a heuristic agent."""
 
-
+import os
 import sys
 
-sys.path.append("..")
+sys.path.append(os.getcwd())
 
 import numpy as np
 from gym_simplifiedtetris.agents import HeuristicAgent
