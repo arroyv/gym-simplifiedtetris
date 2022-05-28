@@ -10,8 +10,7 @@ from gym_simplifiedtetris.envs._simplified_tetris_engine import _SimplifiedTetri
 class HeuristicAgent(object):
     """An agent that selects actions according to a heuristic."""
 
-    def __init__(self) -> None:
-        self.weights = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
+    WEIGHTS = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
 
     def predict(self, env: _SimplifiedTetrisEngine) -> int:
         """Return the action yielding the largest heuristic score.
@@ -49,7 +48,7 @@ class HeuristicAgent(object):
             for idx, feature_func in enumerate(self._get_dellacherie_funcs()):
                 feature_values[idx] = feature_func(env)
 
-            scores[action] = np.dot(feature_values, self.weights)
+            scores[action] = np.dot(feature_values, self.WEIGHTS)
 
             env._engine._update_grid(False)
 
