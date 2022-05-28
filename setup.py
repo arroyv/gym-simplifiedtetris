@@ -21,7 +21,7 @@ classifiers = [
 
 setup(
     name="gym_simplifiedtetris",
-    version="0.4.0",
+    version="0.4.1",
     author="Oliver Overend",
     author_email="ollyoverend10@gmail.com",
     url="https://github.com/OliverOverend/gym-simplifiedtetris",
