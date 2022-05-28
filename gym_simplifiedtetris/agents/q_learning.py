@@ -72,7 +72,7 @@ class QLearningAgent(object):
         """
         obs_action = list(obs)
         obs_action.append(action)
-        obs_action = tuple(obs)
+        obs_action = tuple(obs_action)
 
         max_q_value = np.max(self._q_table[tuple(next_obs)])
 
