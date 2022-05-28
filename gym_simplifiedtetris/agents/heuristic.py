@@ -25,7 +25,7 @@ class HeuristicAgent(object):
     def _get_dellacherie_scores(self, env: _SimplifiedTetrisEngine) -> np.array:
         """Compute and return the Dellacherie feature values.
 
-        :return: a list of the Dellacherie feature values.
+        :return: Dellacherie feature values.
         """
         scores = np.empty((env._engine._num_actions), dtype="double")
 
@@ -57,9 +57,10 @@ class HeuristicAgent(object):
             env._engine._colour_grid = deepcopy(old_colour_grid)
 
         max_idx = np.argwhere(scores == np.amax(scores)).flatten()
+        is_a_tie = len(max_idx) > 1
 
         # Resort to the priorities when there is a tie.
-        return self._get_priorities(max_idx, env) if len(max_idx) > 1 else scores
+        return self._get_priorities(max_idx, env) if is_a_tie else scores
 
     def _get_priorities(
         self, max_indices: np.array, env: _SimplifiedTetrisEngine
