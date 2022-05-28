@@ -40,7 +40,9 @@ class _PotentialBasedShapingReward(object):
         num_lines_cleared = self._engine._clear_rows()
 
         # I chose the potential function to be a function of the well-known holes feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
-        heuristic_value = self._engine._get_holes()
+        heuristic_value = np.count_nonzero(
+            (self._engine._grid).cumsum(axis=1) * ~self._engine._grid
+        )
 
         self._update_range(heuristic_value)
 

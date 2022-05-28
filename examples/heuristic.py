@@ -24,8 +24,7 @@ def main() -> None:
     while episode_num < num_episodes:
         env.render()
 
-        heuristic_scores = env._engine._get_dellacherie_scores()
-        action = agent.predict(heuristic_scores)
+        action = agent.predict(env)
 
         obs, reward, done, info = env.step(action)
         ep_returns[episode_num] += info["num_rows_cleared"]

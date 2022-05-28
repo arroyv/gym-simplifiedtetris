@@ -138,9 +138,8 @@ dmypy.json
 cython_debug/
 
 # Other
-tests/output/Test_Report.html
+*.html
 .DS_Store
 .vscode
 typings
 tox.ini
-cumulative_wells.py
