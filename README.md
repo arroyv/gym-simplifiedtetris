@@ -8,9 +8,6 @@
   <a href="https://www.codefactor.io/repository/github/oliveroverend/gym-simplifiedtetris">
     <img src="https://img.shields.io/codefactor/grade/github/OliverOverend/gym-simplifiedtetris?color=ff69b4&style=for-the-badge">
   </a>
-  <a href="https://pypi.org/">
-    <img src="https://img.shields.io/pypi/v/gym-simplifiedtetris?style=for-the-badge">
-  </a>
   <a href="https://pypi.org/project/gym-simplifiedtetris/">
     <img src="https://img.shields.io/pypi/pyversions/gym_simplifiedtetris?style=for-the-badge">
   </a>
