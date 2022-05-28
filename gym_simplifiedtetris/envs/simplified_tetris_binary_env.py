@@ -1,4 +1,4 @@
-"""Contains a simplified Tetris env class.
+"""Simplified Tetris binary env.
 """
 
 import numpy as np

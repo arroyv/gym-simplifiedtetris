@@ -1,20 +1,22 @@
 """A script for running a uniform agent on Tetris."""
 
+import os
 import sys
 
-sys.path.append("..")
+sys.path.append(os.getcwd())
 
 import gym
 import numpy as np
 from gym_simplifiedtetris.agents import UniformAgent
 
 
-def main() -> None:
+def eval_uniform_agent(
+    env: gym.Env,
+    agent: UniformAgent,
+    num_episodes: int,
+) -> None:
     """Run ten games, selecting actions uniformly at random."""
     ep_returns = np.zeros(10)
-
-    env = gym.make("simplifiedtetris-binary-20x10-4-v0")
-    agent = UniformAgent(env.action_space.n)
 
     obs = env.reset()
 
@@ -34,6 +36,19 @@ def main() -> None:
 
     print(
         f"""\nScore obtained from averaging over {num_episodes} games:\nMean = {np.mean(ep_returns):.1f}\nStandard deviation = {np.std(ep_returns):.1f}"""
+    )
+
+
+def main() -> None:
+    env = gym.make("simplifiedtetris-binary-20x10-4-v0")
+    agent = UniformAgent(env.action_space.n)
+
+    num_episodes = 10
+
+    eval_uniform_agent(
+        agent=agent,
+        env=env,
+        num_episodes=num_episodes,
     )
 
 

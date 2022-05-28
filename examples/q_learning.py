@@ -1,8 +1,9 @@
 """A script for running training and evaluating a Q-learning agent."""
 
+import os
 import sys
 
-sys.path.append("..")
+sys.path.append(os.getcwd())
 
 from typing import Tuple
 
@@ -40,7 +41,9 @@ def train_q_learning_agent(
             env.render()
 
         action = agent.predict(obs)
+
         next_obs, reward, done, info = env.step(action)
+
         agent.learn(reward=reward, obs=obs, next_obs=next_obs, action=action)
         ep_return += info["num_rows_cleared"]
 
@@ -55,6 +58,7 @@ def train_q_learning_agent(
         else:
             obs = next_obs
 
+    env.close()
     agent.epsilon = 0
     return agent
 
@@ -63,7 +67,7 @@ def eval_q_learning_agent(
     agent: QLearningAgent,
     env: gym.Env,
     num_episodes: int,
-    render: bool,
+    render: bool = True,
 ) -> Tuple[float, float]:
     """Evaluate the agent's performance and return the mean score and standard deviation.
 
@@ -88,6 +92,7 @@ def eval_q_learning_agent(
             action = agent.predict(obs)
             obs, _, done, info = env.step(action)
             ep_returns[episode_id] += info["num_rows_cleared"]
+
     env.close()
 
     mean_score = np.mean(ep_returns)
@@ -102,26 +107,36 @@ def eval_q_learning_agent(
 def main() -> None:
     """Train and evaluate a Q-learning agent."""
     grid_dims = (7, 4)
+    piece_size = 3
+
     env = Tetris(
         grid_dims=grid_dims,
-        piece_size=3,
+        piece_size=piece_size,
     )
     agent = QLearningAgent(
         grid_dims=grid_dims,
         num_pieces=env.num_pieces,
         num_actions=env.num_actions,
     )
+
+    num_eval_timesteps = 10000
+
     agent = train_q_learning_agent(
-        env=env,
-        agent=agent,
-        num_eval_timesteps=100,
-        render=True,
+        env=env, agent=agent, num_eval_timesteps=num_eval_timesteps, render=True
     )
+
+    del env
+    env = Tetris(
+        grid_dims=grid_dims,
+        piece_size=piece_size,
+    )
+
+    num_episodes = 30
+
     eval_q_learning_agent(
         agent=agent,
         env=env,
-        num_episodes=30,
-        render=True,
+        num_episodes=num_episodes,
     )
 
 

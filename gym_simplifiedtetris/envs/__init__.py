@@ -1,3 +1,5 @@
+"""Initialise envs/."""
+
 from gym_simplifiedtetris.envs._simplified_tetris_base_env import (
     _SimplifiedTetrisBaseEnv,
 )
