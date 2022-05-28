@@ -17,6 +17,7 @@ class HeuristicAgent(object):
 
         Ties are separated using a priority rating, which is based on the translation and rotation.
 
+        :param env: environment that the agent resides in.
         :return: action with the largest rating; ties are separated based on the priority.
         """
         dellacherie_scores = self._get_dellacherie_scores(env)
@@ -25,6 +26,7 @@ class HeuristicAgent(object):
     def _get_dellacherie_scores(self, env: _SimplifiedTetrisEngine) -> np.array:
         """Compute and return the Dellacherie feature values.
 
+        :param env: environment that the agent resides in.
         :return: Dellacherie feature values.
         """
         scores = np.empty((env._engine._num_actions), dtype="double")
@@ -68,7 +70,7 @@ class HeuristicAgent(object):
         """Compute and return the priorities of the available actions.
 
         :param max_indices: actions with the maximum ratings.
-
+        :param env: environment that the agent resides in.
         :return: priorities.
         """
         priorities = np.zeros((env._engine._num_actions), dtype="double")
@@ -109,6 +111,7 @@ class HeuristicAgent(object):
 
         Landing height = the midpoint of the last piece to be placed.
 
+        :param env: environment that the agent resides in.
         :return: landing height.
         """
         return (
@@ -120,6 +123,7 @@ class HeuristicAgent(object):
     def _get_eroded_cells(self, env: _SimplifiedTetrisEngine) -> int:
         """Return the eroded cells value. Num. eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
 
+        :param env: environment that the agent resides in.
         :return: eroded cells.
         """
         return (
@@ -137,6 +141,7 @@ class HeuristicAgent(object):
         Author: Ben Schofield
         Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L45
 
+        :param env: environment that the agent resides in.
         :return: row transitions.
         """
         # Adds a column either side.
@@ -153,6 +158,7 @@ class HeuristicAgent(object):
         Author: Ben Schofield
         Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L60
 
+        :param env: environment that the agent resides in.
         :return: column transitions.
         """
         # Adds a full row to the bottom.
@@ -166,6 +172,7 @@ class HeuristicAgent(object):
 
         A hole is an empty cell with at least one full cell above it in the same column.
 
+        :param env: environment that the agent resides in.
         :return: value of the feature holes.
         """
         return np.count_nonzero((env._engine._grid).cumsum(axis=1) * ~env._engine._grid)
@@ -181,6 +188,7 @@ class HeuristicAgent(object):
 
         Attribution: Ben Schofield
 
+        :param env: environment that the agent resides in.
         :return: cumulative wells value.
         """
         grid_ext = np.ones(
