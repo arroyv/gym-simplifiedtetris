@@ -119,7 +119,6 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         Otherwise, select a new piece and reset the anchor.
 
         :param action: action to be taken.
-
         :return: next observation, reward, game termination indicator, and env info.
         """
         info = {}
@@ -156,7 +155,6 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         """Render the env.
 
         :param mode: render mode.
-
         :return: image pixel values.
         """
         return self._engine._render(mode)

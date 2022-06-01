@@ -45,7 +45,6 @@ class QLearningAgent(object):
         """Return an action whilst following an epsilon-greedy policy.
 
         :param obs: observation.
-
         :return: action.
         """
         # Choose an action at random with probability epsilon.

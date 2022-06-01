@@ -26,7 +26,6 @@ def train_q_learning_agent(
     :param agent: Q-learning agent.
     :param num_eval_timesteps: agent will be evaluated for this number of timesteps.
     :param render: whether to render the env.
-
     :return: trained Q-learning agent.
     """
     ep_return = 0
@@ -75,7 +74,6 @@ def eval_q_learning_agent(
     :param env: agent will be evaluated on this env.
     :param num_episodes: number of games to evaluate the trained agent.
     :param render: renders the agent playing SimplifiedTetris after training.
-
     :return: mean score and standard deviation obtained from letting the agent play |num_episodes| games.
     """
     ep_returns = np.zeros(num_episodes, dtype=int)

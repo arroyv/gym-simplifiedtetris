@@ -1,3 +1,5 @@
+"""Tetris pieces."""
+
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Tuple, Union
@@ -128,7 +130,6 @@ def _generate_max_min(coord_string: str, piece_coords: PieceCoords) -> Dict[int,
 
     :param coord_string: string specifying what to calculate.
     :param piece_coords: piece coordinates.
-
     :return: max or min x or y coordinates for the coordinate string and coordinates provided.
     """
     settings = MAX_MIN_SETTINGS[coord_string]
@@ -161,6 +162,7 @@ class Polymino(object):
     _size: int
     _id: int
     _rotation: int = 0
+
     _all_coords: PieceCoords = field(init=False)
     _coords: PieceCoord = field(init=False)
     _name: str = field(init=False)

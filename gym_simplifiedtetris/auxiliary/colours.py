@@ -8,7 +8,6 @@ def _get_bgr_code(colour: str) -> Tuple[float, float, float]:
     """Return the inverted RGB code corresponding to the colour provided.
 
     :param colour: colour.
-
     :return: inverted RGB code.
     """
     return tuple([255 * code for code in colors.to_rgb(colour)][::-1])
