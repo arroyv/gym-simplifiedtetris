@@ -86,6 +86,7 @@ obs = env.reset()
 episode_num = 0
 while episode_num < 10:
     env.render()
+    
     action = env.action_space.sample()
     obs, reward, done, info = env.step(action)
 
@@ -100,7 +101,7 @@ env.close()
 Alternatively, you can import the environment directly:
 
 ```python
-from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
+from gym_simplifiedtetris import SimplifiedTetrisBinaryEnv as Tetris
 
 env = Tetris(grid_dims=(20, 10), piece_size=4)
 ```
