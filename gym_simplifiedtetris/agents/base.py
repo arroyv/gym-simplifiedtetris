@@ -8,7 +8,7 @@ import numpy as np
 
 
 class BaseAgent(ABC):
-    """Base class for agents."""
+    """Agent base class."""
 
     @abstractmethod
     def predict(self, obs: np.ndarray, env: gym.Env, **kwargs: Any) -> int:
