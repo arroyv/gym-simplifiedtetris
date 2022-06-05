@@ -1,19 +1,18 @@
-"""A script for running a heuristic agent."""
+"""Heuristic agent evaluation."""
 
 import os
 import sys
 
-import gym
-
 sys.path.append(os.getcwd())
 
+import gym
 import numpy as np
-from gym_simplifiedtetris.agents import HeuristicAgent
+from gym_simplifiedtetris.agents import DellacherieAgent
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
 def eval_heuristic_agent(
-    agent: HeuristicAgent, env: gym.Env, num_episodes: int
+    agent: DellacherieAgent, env: gym.Env, num_episodes: int
 ) -> None:
     """Evaluate an agent that selects action according to a heuristic."""
     episode_num = 0
@@ -42,18 +41,13 @@ def eval_heuristic_agent(
 
 
 def main() -> None:
-    """Evaluate an Heuristic agent."""
-    grid_dims = (10, 10)
-
-    agent = HeuristicAgent()
-    env = Tetris(grid_dims=grid_dims, piece_size=4)
-
-    num_episodes = 100
+    """Evaluate the Dellacherie agent."""
+    env = Tetris(grid_dims=(10, 10), piece_size=4)
 
     eval_heuristic_agent(
-        agent=agent,
+        agent=DellacherieAgent(),
         env=env,
-        num_episodes=num_episodes,
+        num_episodes=30,
     )
 
 

@@ -4,14 +4,14 @@ import unittest
 
 import numpy as np
 import pytest
-from gym_simplifiedtetris.agents import HeuristicAgent
+from gym_simplifiedtetris.agents import DellacherieAgent
 from gym_simplifiedtetris.auxiliary import Polymino
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
 
 
-class HeuristicAgentTest(unittest.TestCase):
+class DellacherieAgentTest(unittest.TestCase):
     def setUp(self) -> None:
-        self.agent = HeuristicAgent()
+        self.agent = DellacherieAgent()
         self.env = Tetris(grid_dims=(20, 10), piece_size=4)
 
         self.env.reset()

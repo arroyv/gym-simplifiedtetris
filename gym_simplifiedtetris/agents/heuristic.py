@@ -7,7 +7,7 @@ import numpy as np
 from gym_simplifiedtetris.envs._simplified_tetris_engine import _SimplifiedTetrisEngine
 
 
-class HeuristicAgent(object):
+class DellacherieAgent(object):
     """An agent that selects actions according to a heuristic."""
 
     WEIGHTS = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
