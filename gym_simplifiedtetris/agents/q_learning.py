@@ -1,12 +1,13 @@
 """Q-learning agent.
 """
 
-from typing import List, Tuple, Union
+from typing import Any, List, Tuple, Union
 
 import numpy as np
+from gym_simplifiedtetris.agents.base import BaseAgent
 
 
-class QLearningAgent(object):
+class QLearningAgent(BaseAgent):
     """An agent that learns a Q-value for each state-action pair.
 
     :attr epsilon: exploration rate.
@@ -41,7 +42,7 @@ class QLearningAgent(object):
         q_table_dims.extend([num_pieces, num_actions])
         self._q_table = np.zeros((q_table_dims), dtype="double")
 
-    def predict(self, obs: np.ndarray) -> int:
+    def predict(self, obs: np.ndarray, **kwargs: Any) -> int:
         """Return an action whilst following an epsilon-greedy policy.
 
         :param obs: observation.

@@ -1,9 +1,8 @@
-"""Testing the Heuristic agent's methods."""
+"""Testing the Dellacherie agent's methods."""
 
 import unittest
 
 import numpy as np
-import pytest
 from gym_simplifiedtetris.agents import DellacherieAgent
 from gym_simplifiedtetris.auxiliary import Polymino
 from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris

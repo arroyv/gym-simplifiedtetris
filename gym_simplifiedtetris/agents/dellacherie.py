@@ -2,17 +2,19 @@
 """
 
 from copy import deepcopy
+from typing import Any
 
 import numpy as np
+from gym_simplifiedtetris.agents.base import BaseAgent
 from gym_simplifiedtetris.envs._simplified_tetris_engine import _SimplifiedTetrisEngine
 
 
-class DellacherieAgent(object):
-    """An agent that selects actions according to a heuristic."""
+class DellacherieAgent(BaseAgent):
+    """An agent that selects actions according to the Dellacherie features."""
 
     WEIGHTS = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
 
-    def predict(self, env: _SimplifiedTetrisEngine) -> int:
+    def predict(self, env: _SimplifiedTetrisEngine, **kwargs: Any) -> int:
         """Return the action yielding the largest heuristic score.
 
         Ties are separated using a priority rating, which is based on the translation and rotation.

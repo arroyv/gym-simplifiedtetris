@@ -6,8 +6,6 @@ import sys
 
 sys.path.append(os.getcwd())
 
-import gym_simplifiedtetris
-
 
 def run_example_1() -> None:
     """Example 1 in the README's Usage section."""

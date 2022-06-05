@@ -1,10 +1,13 @@
 """Uniform agent.
 """
 
+from typing import Any
+
 import numpy as np
+from gym_simplifiedtetris.agents.base import BaseAgent
 
 
-class UniformAgent(object):
+class UniformAgent(BaseAgent):
     """An agent that selects actions uniformly at random.
 
     :attr _num_actions: the number of actions available to the agent in each state.
@@ -17,7 +20,7 @@ class UniformAgent(object):
         """
         self._num_actions = num_actions
 
-    def predict(self) -> int:
+    def predict(self, **kwargs: Any) -> int:
         """Select an action uniformly at random.
 
         :return: action chosen by the agent.
