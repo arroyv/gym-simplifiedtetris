@@ -1,4 +1,4 @@
-"""Two usage examples shown in the README.md file.
+"""Examples of the environments provided by gym_simplifiedtetris.
 """
 
 import os
@@ -10,7 +10,7 @@ import gym_simplifiedtetris
 
 
 def run_example_1() -> None:
-    """Example 1 in the README Usage section."""
+    """Example 1 in the README's Usage section."""
     import gym
     import gym_simplifiedtetris
 
@@ -21,6 +21,7 @@ def run_example_1() -> None:
     episode_num = 0
     while episode_num < 10:
         env.render()
+
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
 
@@ -33,8 +34,8 @@ def run_example_1() -> None:
 
 
 def run_example_2() -> None:
-    """Example 1 in the README Usage section."""
-    from gym_simplifiedtetris.envs import SimplifiedTetrisBinaryEnv as Tetris
+    """Example 2 in the README's Usage section."""
+    from gym_simplifiedtetris import SimplifiedTetrisBinaryEnv as Tetris
 
     env = Tetris(grid_dims=(20, 10), piece_size=4)
 
