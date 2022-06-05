@@ -13,7 +13,7 @@ from PIL import Image
 from ..auxiliary import Colours, Polymino
 
 
-class _SimplifiedTetrisEngine(object):
+class SimplifiedTetrisEngine(object):
     """A simplified Tetris engine.
 
     Methods related to rendering:

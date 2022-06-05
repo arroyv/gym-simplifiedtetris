@@ -1,100 +1,104 @@
-"""Dellacherie agent.
+"""Pierre Dellacherie's agent.
 """
 
 from copy import deepcopy
-from typing import Any
+from typing import Any, Callable, Dict, List, Tuple
 
 import numpy as np
 from gym_simplifiedtetris.agents.base import BaseAgent
-from gym_simplifiedtetris.envs._simplified_tetris_engine import _SimplifiedTetrisEngine
+from gym_simplifiedtetris.envs._simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class DellacherieAgent(BaseAgent):
-    """An agent that selects actions according to the Dellacherie features."""
+    """An agent that selects actions based on the Dellacherie feature set."""
 
     WEIGHTS = np.array([-1, 1, -1, -1, -4, -1], dtype="double")
 
-    def predict(self, env: _SimplifiedTetrisEngine, **kwargs: Any) -> int:
+    def predict(self, env: SimplifiedTetrisEngine, **kwargs: Any) -> int:
         """Return the action yielding the largest heuristic score.
 
-        Ties are separated using a priority rating, which is based on the translation and rotation.
+        Ties are separated using a priority rating, which is based on the translation and rotation of the current piece.
 
         :param env: environment that the agent resides in.
-        :return: action with the largest rating; ties are separated based on the priority.
+        :return: action with the largest rating (where ties are separated based on the priority).
         """
-        dellacherie_scores = self._get_dellacherie_scores(env)
-        return np.argmax(dellacherie_scores)
+        dell_scores = self._compute_dell_scores(env)
+        return np.argmax(dell_scores)
 
-    def _get_dellacherie_scores(self, env: _SimplifiedTetrisEngine) -> np.array:
-        """Compute and return the Dellacherie feature values.
+    def _compute_dell_scores(self, env: SimplifiedTetrisEngine) -> np.ndarray:
+        """Compute and return the Dellacherie feature set values.
 
         :param env: environment that the agent resides in.
         :return: Dellacherie feature values.
         """
-        scores = np.empty((env._engine._num_actions), dtype="double")
+        dell_scores = np.empty((env.num_actions,), dtype="double")
 
-        for action, (translation, rotation) in env._engine._all_available_actions[
-            env._engine._piece._id
-        ].items():
+        available_actions = env._engine._all_available_actions[env._engine._piece._id]
+
+        for action, (translation, rotation) in available_actions.items():
             old_grid = deepcopy(env._engine._grid)
-            old_anchor = deepcopy(env._engine._anchor)
             old_colour_grid = deepcopy(env._engine._colour_grid)
+            old_anchor = deepcopy(env._engine._anchor)
 
             env._engine._rotate_piece(rotation)
-
             env._engine._anchor = [translation, 0]
 
             env._engine._hard_drop()
             env._engine._update_grid(True)
             env._engine._clear_rows()
 
-            feature_values = np.empty((6), dtype="double")
-            for idx, feature_func in enumerate(self._get_dellacherie_funcs()):
-                feature_values[idx] = feature_func(env)
-
-            scores[action] = np.dot(feature_values, self.WEIGHTS)
+            feature_values = np.array(
+                [func(env) for func in self._get_dell_funcs()], dtype="double"
+            )
+            dell_scores[action] = np.dot(feature_values, self.WEIGHTS)
 
             env._engine._update_grid(False)
 
-            env._engine._anchor = deepcopy(old_anchor)
             env._engine._grid = deepcopy(old_grid)
             env._engine._colour_grid = deepcopy(old_colour_grid)
+            env._engine._anchor = deepcopy(old_anchor)
 
-        max_idx = np.argwhere(scores == np.amax(scores)).flatten()
-        is_a_tie = len(max_idx) > 1
+        best_actions = np.argwhere(dell_scores == np.amax(dell_scores)).flatten()
+        is_a_tie = len(best_actions) > 1
 
-        # Resort to the priorities when there is a tie.
-        return self._get_priorities(max_idx, env) if is_a_tie else scores
+        # Resort to the priorities if there is a tie.
+        if is_a_tie:
+            return self._get_priorities(
+                best_actions=best_actions,
+                available_actions=available_actions,
+                x_spawn_pos=env._width_ / 2 + 1,
+                num_actions=env.num_actions,
+            )
+        return dell_scores
 
     def _get_priorities(
-        self, max_indices: np.array, env: _SimplifiedTetrisEngine
-    ) -> np.array:
+        self,
+        best_actions: np.ndarray,
+        available_actions: Dict[int, Dict[int, Tuple[int, int]]],
+        x_spawn_pos: int,
+        num_actions: int,
+    ) -> np.ndarray:
         """Compute and return the priorities of the available actions.
 
-        :param max_indices: actions with the maximum ratings.
-        :param env: environment that the agent resides in.
+        :param best_actions: actions with the maximum ratings.
+        :param available_actions: actions available to the agent.
+        :param x_spawn_pos: x-coordinate of the spawn position.
+        :param num_actions: number of actions available to the agent.
         :return: priorities.
         """
-        priorities = np.zeros((env._engine._num_actions), dtype="double")
+        priorities = np.ones((num_actions,), dtype="double") * -np.inf
 
-        for action in max_indices:
-            translation, rotation = env._engine._all_available_actions[
-                env._engine._piece._id
-            ][action]
-            x_spawn_pos = env._engine._width / 2 + 1
-            priorities[action] += 100 * abs(translation - x_spawn_pos)
-
-            if translation < x_spawn_pos:
-                priorities[action] += 10
-
-            priorities[action] -= rotation / 90
-
-            # Ensure that the priority of the best actions is never negative.
-            priorities[action] += 5  # 5 is always greater than rotation / 90.
+        for action in best_actions:
+            translation, rotation = available_actions[action]
+            priorities[action] = (
+                (100 * abs(translation - x_spawn_pos))
+                - (rotation / 90)
+                + (10 * (translation < x_spawn_pos))
+            )
 
         return priorities
 
-    def _get_dellacherie_funcs(self) -> list:
+    def _get_dell_funcs(self) -> List[Callable[..., int]]:
         """Return the Dellacherie feature functions.
 
         :return: Dellacherie feature functions.
@@ -103,12 +107,12 @@ class DellacherieAgent(BaseAgent):
             self._get_landing_height,
             self._get_eroded_cells,
             self._get_row_transitions,
-            self._get_column_transitions,
+            self._get_col_transitions,
             self._get_holes,
-            self._get_cumulative_wells,
+            self._get_cum_wells,
         ]
 
-    def _get_landing_height(self, env: _SimplifiedTetrisEngine) -> int:
+    def _get_landing_height(self, env: SimplifiedTetrisEngine) -> int:
         """Compute the landing height and return it.
 
         Landing height = the midpoint of the last piece to be placed.
@@ -122,8 +126,10 @@ class DellacherieAgent(BaseAgent):
             else 0
         )
 
-    def _get_eroded_cells(self, env: _SimplifiedTetrisEngine) -> int:
-        """Return the eroded cells value. Num. eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
+    def _get_eroded_cells(self, env: SimplifiedTetrisEngine) -> int:
+        """Return the eroded cells value.
+
+        Eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
 
         :param env: environment that the agent resides in.
         :return: eroded cells.
@@ -135,7 +141,7 @@ class DellacherieAgent(BaseAgent):
             else 0
         )
 
-    def _get_row_transitions(self, env: _SimplifiedTetrisEngine) -> float:
+    def _get_row_transitions(self, env: SimplifiedTetrisEngine) -> int:
         """Return the row transitions value.
 
         Row transitions = Number of transitions from empty to full cells (or vice versa), examining each row one at a time.
@@ -150,9 +156,9 @@ class DellacherieAgent(BaseAgent):
         grid = np.ones((env._engine._width + 2, env._engine._height), dtype="bool")
 
         grid[1:-1, :] = env._engine._grid.copy()
-        return np.diff(grid.T).sum()
+        return int(np.diff(grid.T).sum())
 
-    def _get_column_transitions(self, env: _SimplifiedTetrisEngine) -> float:
+    def _get_col_transitions(self, env: SimplifiedTetrisEngine) -> int:
         """Return the column transitions value.
 
         Column transitions = Number of transitions from empty to full (or vice versa), examining each column one at a time.
@@ -167,9 +173,9 @@ class DellacherieAgent(BaseAgent):
         grid = np.ones((env._engine._width, env._engine._height + 1), dtype="bool")
 
         grid[:, :-1] = env._engine._grid.copy()
-        return np.diff(grid).sum()
+        return int(np.diff(grid).sum())
 
-    def _get_holes(self, env: _SimplifiedTetrisEngine) -> int:
+    def _get_holes(self, env: SimplifiedTetrisEngine) -> int:
         """Compute the number of holes present in the current grid and return it.
 
         A hole is an empty cell with at least one full cell above it in the same column.
@@ -179,7 +185,7 @@ class DellacherieAgent(BaseAgent):
         """
         return np.count_nonzero((env._engine._grid).cumsum(axis=1) * ~env._engine._grid)
 
-    def _get_cumulative_wells(self, env: _SimplifiedTetrisEngine) -> int:
+    def _get_cum_wells(self, env: SimplifiedTetrisEngine) -> int:
         """Compute the cumulative wells value and return it.
 
         Cumulative wells is defined here:

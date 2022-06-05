@@ -3,7 +3,7 @@
 from gym_simplifiedtetris.envs._simplified_tetris_base_env import (
     _SimplifiedTetrisBaseEnv,
 )
-from gym_simplifiedtetris.envs._simplified_tetris_engine import _SimplifiedTetrisEngine
+from gym_simplifiedtetris.envs._simplified_tetris_engine import SimplifiedTetrisEngine
 from gym_simplifiedtetris.envs.reward_shaping import (
     SimplifiedTetrisBinaryShapedEnv,
     SimplifiedTetrisPartBinaryShapedEnv,
@@ -17,7 +17,7 @@ from gym_simplifiedtetris.envs.simplified_tetris_part_binary_env import (
 
 __all__ = [
     "SimplifiedTetrisBinaryEnv",
-    "_SimplifiedTetrisEngine",
+    "SimplifiedTetrisEngine",
     "SimplifiedTetrisBinaryShapedEnv",
     "SimplifiedTetrisPartBinaryEnv",
     "SimplifiedTetrisPartBinaryShapedEnv",

@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Tuple, Union
 import gym
 import numpy as np
 
-from ._simplified_tetris_engine import _SimplifiedTetrisEngine
+from ._simplified_tetris_engine import SimplifiedTetrisEngine
 
 
 class _SimplifiedTetrisBaseEnv(gym.Env):
@@ -85,7 +85,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
 
         self._seed(seed)
 
-        self._engine = _SimplifiedTetrisEngine(
+        self._engine = SimplifiedTetrisEngine(
             grid_dims=grid_dims,
             piece_size=piece_size,
             num_pieces=self._num_pieces_,

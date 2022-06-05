@@ -1,10 +1,10 @@
-"""Testing _SimplifiedTetrisEngine."""
+"""Testing SimplifiedTetrisEngine."""
 
 import unittest
 
 import numpy as np
 from gym_simplifiedtetris.auxiliary import Polymino
-from gym_simplifiedtetris.envs import _SimplifiedTetrisEngine as Engine
+from gym_simplifiedtetris.envs import SimplifiedTetrisEngine as Engine
 
 
 class SimplifiedTetrisEngineStandardTetrisTest(unittest.TestCase):
