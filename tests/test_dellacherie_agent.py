@@ -1,7 +1,5 @@
 """Testing the Dellacherie agent's methods."""
 
-import unittest
-
 import numpy as np
 import pytest
 from gym_simplifiedtetris.agents import DellacherieAgent
@@ -87,6 +85,7 @@ def test_get_row_transitions_populated(agent, env):
     env._engine._grid[0, env._engine._height - 1] = False
     env._engine._grid[2, env._engine._height - 1] = False
     env._engine._grid[1, env._engine._height - 2] = False
+
     assert agent._get_row_transitions(env) == 42
 
 
@@ -107,6 +106,7 @@ def test_get_column_transitions_populated(agent, env):
     env._engine._grid[0, env._engine._height - 1] = False
     env._engine._grid[2, env._engine._height - 1] = False
     env._engine._grid[1, env._engine._height - 2] = False
+
     assert agent._get_col_transitions(env) == 14
 
 
@@ -126,12 +126,14 @@ def test_get_holes_populated_two_holes(agent, env):
     env._engine._grid[:, -2:] = True
     env._engine._grid[0, env._engine._height - 1] = False
     env._engine._grid[2, env._engine._height - 1] = False
+
     assert agent._get_holes(env) == 2
 
 
 def test_get_holes_populated_no_holes(agent, env):
     env._engine._grid[:, -2:] = True
     env._engine._grid[0, env._engine._height - 2 :] = False
+
     assert agent._get_holes(env) == 0
 
 
