@@ -52,8 +52,8 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
     def __init__(
         self,
         *,
-        grid_dims: Union[Tuple[int, int], List[int]],
-        piece_size: int,
+        grid_dims: Union[Tuple[int, int], List[int]] = (20, 10),
+        piece_size: int = 4,
         seed: int = 8191,
     ) -> None:
         """Initialise the object.

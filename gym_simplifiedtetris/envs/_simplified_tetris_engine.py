@@ -370,8 +370,6 @@ class SimplifiedTetrisEngine(object):
             )
 
             if set_piece:
-                if y_coord == -1:
-                    print()
                 self._last_move_info["rows_added_to"][y_coord] += 1
                 self._grid[x_coord, y_coord] = 1
                 self._colour_grid[x_coord, y_coord] = self._piece._id + 1
