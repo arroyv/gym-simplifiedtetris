@@ -5,7 +5,7 @@ from typing import List
 
 from gym.envs.registration import register as register_env_in_gym
 
-env_list: List[str] = []
+registered_envs: List[str] = []
 
 
 def register_env(incomplete_id: str, entry_point: str) -> None:
@@ -34,13 +34,13 @@ def register_env(incomplete_id: str, entry_point: str) -> None:
     )
 
     for (height, width), piece_size in all_combinations:
-        idx = incomplete_id + f"-{height}x{width}-{piece_size}-v0"
+        env_id = incomplete_id + f"-{height}x{width}-{piece_size}-v0"
 
-        if idx in env_list:
-            raise ValueError(f"Already registered env id: {idx}")
+        if env_id in registered_envs:
+            raise ValueError(f"Already registered env id: {env_id}")
 
         register_env_in_gym(
-            id=idx,
+            id=env_id,
             entry_point=entry_point,
             nondeterministic=True,
             kwargs={
@@ -48,4 +48,4 @@ def register_env(incomplete_id: str, entry_point: str) -> None:
                 "piece_size": piece_size,
             },
         )
-        env_list.append(idx)
+        registered_envs.append(env_id)

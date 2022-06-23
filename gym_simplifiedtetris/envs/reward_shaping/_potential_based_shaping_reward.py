@@ -28,7 +28,7 @@ class _PotentialBasedShapingReward(object):
     def __init__(self) -> None:
         """Initialise the shaping reward object."""
         # Setting the range in this way ensures that the min and max are definitely updated the first time the method "_update_range" is called.
-        self._heuristic_range = {"min": 1000, "max": -1}
+        self._heuristic_range = {"min": 1e7, "max": -1e7}
 
         self._old_potential = self._INITIAL_POTENTIAL
 
@@ -56,7 +56,8 @@ class _PotentialBasedShapingReward(object):
         )
 
         # Notice that gamma was set to 1, which isn't strictly allowed since it should be less than 1 according to Theorem 1 in this paper. I found that the agent rarely received positive rewards using this reward function because the agent was frequently transitioning to states with a lower potential (since it was rarely clearing lines).
-        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared
+        # HACK: Added 0.3.
+        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3
 
         self._old_potential = new_potential
 

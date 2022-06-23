@@ -8,6 +8,7 @@ from typing import Dict, Iterable, List, Tuple, Union
 
 import cv2.cv2 as cv
 import numpy as np
+import torch as th
 from PIL import Image
 
 from ..auxiliary import Colours, Polymino
@@ -101,6 +102,7 @@ class SimplifiedTetrisEngine(object):
         piece_size: int,
         num_pieces: int,
         num_actions: int,
+        obs_space_shape: tuple,
     ) -> None:
         """Initialise the object.
 
@@ -113,6 +115,7 @@ class SimplifiedTetrisEngine(object):
         self._piece_size = piece_size
         self._num_pieces = num_pieces
         self._num_actions = num_actions
+        self._obs_space_shape = obs_space_shape
 
         self._grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="bool")
         self._colour_grid = np.zeros((grid_dims[1], grid_dims[0]), dtype="int")
@@ -126,8 +129,6 @@ class SimplifiedTetrisEngine(object):
         self._last_move_info: Dict[str, float] = {}
 
         self._pieces = self._init_pieces()
-        self._update_anchor()
-        self._get_new_piece()
         self._all_available_actions = self._compute_all_available_actions()
         self._reset()
 
@@ -146,7 +147,7 @@ class SimplifiedTetrisEngine(object):
         return {idx: Polymino(self._piece_size, idx) for idx in range(self._num_pieces)}
 
     def _reset(self) -> None:
-        """Reset the score, grids, piece coords, piece id and anchor."""
+        """Reset the score, grids, piece coords, piece id and _anchor."""
         self._score = 0
 
         self._grid = np.zeros_like(self._grid, dtype="bool")
@@ -271,7 +272,7 @@ class SimplifiedTetrisEngine(object):
         self._img = np.concatenate((img_array, self._img), axis=1)
 
     def _update_anchor(self) -> None:
-        """Update the current piece, and reset the anchor."""
+        """Update the current piece, and reset the _anchor."""
         self._anchor = [self._width / 2 - 1, self._piece_size - 1]
 
     def _get_new_piece(self) -> None:
@@ -298,9 +299,9 @@ class SimplifiedTetrisEngine(object):
             # Check if the move is illegal.
             block_off_left = x_pos < 0
             block_off_right = x_pos >= self._width
-            block_above_top = y_pos >= self._height
+            block_below_bot = y_pos >= self._height
 
-            if block_off_left or block_off_right or block_above_top:
+            if block_off_left or block_off_right or block_below_bot:
                 return True
 
             cell_full = self._grid[x_pos, y_pos] > 0
@@ -368,6 +369,8 @@ class SimplifiedTetrisEngine(object):
                 piece_x_coord + self._anchor[0],
                 piece_y_coord + self._anchor[1],
             )
+            if y_coord < 0:
+                print()
 
             if set_piece:
                 self._last_move_info["rows_added_to"][y_coord] += 1
@@ -450,3 +453,94 @@ class SimplifiedTetrisEngine(object):
         :return: translation and rotation corresponding to action.
         """
         return self._all_available_actions[self._piece._id][action]
+
+    def get_best_action(
+        self,
+        agent: object,
+        obs_space: str,
+    ) -> int:
+        """
+        Finds the best action out of the available actions by looking ahead to
+        future possible states and averaging over their V-values.
+
+        :param agent: the agent being evaluated.
+        :param obs_space: which observation space is being used.
+        :return: the best action selected.
+        """
+        available_actions = self._all_available_actions[self._piece._id]
+
+        initial_grid = deepcopy(self._grid)
+        initial_colour_grid = deepcopy(self._colour_grid)
+        initial_anchor = deepcopy(self._anchor)
+        initial_piece = deepcopy(self._piece)
+
+        v_values = np.zeros(len(available_actions))
+
+        # Iterate over next possible actions.
+        for idx, (translation, rotation) in enumerate(available_actions.values()):
+            self._grid = deepcopy(initial_grid)
+            self._anchor = [translation, 0]
+
+            self._piece = deepcopy(initial_piece)
+            self._piece._rotation = rotation
+            self._piece._coords = self._piece._all_coords[self._piece._rotation]
+
+            self._hard_drop()
+            self._update_grid(True)
+
+            n_lines_cleared = self._clear_rows()
+            features = self.get_feat_values(obs_space)
+
+            # Initialise the max q values with the immediate reward.
+            max_q_values = np.ones(self._num_pieces) * n_lines_cleared
+
+            # Iterate over the next possible observations.
+            for piece_id in range(self._num_pieces):
+                self._piece = self._pieces[piece_id]
+
+                # Find the max q-value out of the actions available.
+                observation = th.Tensor(np.append(features, self._piece._id))
+                observation = observation.reshape((-1,) + self._obs_space_shape)
+                observation = th.as_tensor(observation)
+                with th.no_grad():
+                    q_values = (
+                        agent.policy.q_net.forward(observation).detach().numpy()[0]
+                    )
+                max_q_values[piece_id] += np.max(q_values)
+
+            # Find V-value for action.
+            v_values[idx] = np.mean(max_q_values)
+
+        self._anchor = deepcopy(initial_anchor)
+        self._grid = deepcopy(initial_grid)
+        self._piece = deepcopy(initial_piece)
+        self._colour_grid = deepcopy(initial_colour_grid)
+
+        # Choose action leading to the highest V value.
+        v_value_index = np.argmax(v_values)
+        action = list(available_actions.keys())[v_value_index]
+
+        return action
+
+    def get_col_heights(self) -> np.array:
+        """Gets the column heights of the current grid.
+
+        :return: a NumPy array containing the column heights of the grid.
+        """
+        col_heights = self._height - np.argmax(self._grid, axis=1)
+        col_heights[col_heights == self._height] = 0
+        return col_heights
+
+    def get_feat_values(self, obs_space: str) -> np.array:
+        """Gets the feature values according to the obs space.
+
+        :param obs_space: the obs space in use.
+        :return: a NumPy array containing the feature values.
+        """
+        return {
+            # 'Dellacherie': self.get_single_score(np.zeros(6, dtype=int)),
+            # 'Clipped-Offsets': self.get_column_clipped_offsets(),
+            "Heights": self.get_col_heights(),
+            # 'Standard': self.get_current_grid_standard(),
+            "Binary": np.clip(self._grid.flatten(), 0, 1),
+        }[obs_space]

@@ -30,6 +30,7 @@ def engine(grid_dims, piece_size):
         piece_size=piece_size,
         num_pieces=num_pieces,
         num_actions=num_actions,
+        obs_space_shape=None,
     )
 
     engine._reset()

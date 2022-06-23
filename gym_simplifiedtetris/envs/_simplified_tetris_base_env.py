@@ -90,6 +90,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
             piece_size=piece_size,
             num_pieces=self._num_pieces_,
             num_actions=self._num_actions_,
+            obs_space_shape=self.observation_space.shape,
         )
 
     def __str__(self) -> str:
