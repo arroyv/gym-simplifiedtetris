@@ -15,10 +15,15 @@ from gym_simplifiedtetris.envs.simplified_tetris_heights_env import (
     SimplifiedTetrisHeightsEnv,
 )
 
+from gym_simplifiedtetris.envs.simplified_tetris_binary_shapesnew_env import (
+    SimplifiedTetrisBinaryEnv,
+)
+
 __all__ = [
     "SimplifiedTetrisBinaryEnv",
     "SimplifiedTetrisEngine",
     "SimplifiedTetrisBinaryShapedEnv",
+    "SimplifiedTetrisBinaryShapednewEnv",
     "SimplifiedTetrisPartBinaryEnv",
     "SimplifiedTetrisPartBinaryShapedEnv",
     "SimplifiedTetrisHeightsEnv",
