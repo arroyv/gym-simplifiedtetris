@@ -28,17 +28,17 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
 
         # I chose the potential function to be a function of the well-known holes feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
         heuristic_value = np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
-        print(np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid))
+        print('number or holes',np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid))
         print()
-        print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
+        print('(self._engine._grid).cumsum(axis=1) * ~self._engine._grid',(self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
         print()
-        print((self._engine._grid).cumsum(axis=1))
+        print('(self._engine._grid).cumsum(axis=1)',(self._engine._grid).cumsum(axis=1))
         print()
-        print(self._engine._grid)
+        print('self._engine._grid', self._engine._grid)
         print()
-        print(~self._engine._grid)
+        print('self._engine._grid.shape', self._engine._grid.shape)
         print()
-        print(self._engine._grid)
+        print('~self._engine._grid',~self._engine._grid)
         print()
         self._update_range(heuristic_value)
 
