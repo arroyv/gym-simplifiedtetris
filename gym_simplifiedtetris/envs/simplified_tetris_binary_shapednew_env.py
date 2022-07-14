@@ -154,6 +154,27 @@ def num_holes(field):
                         k += 1
     return holes, depth
 
+def holes(field):
+    '''
+    num_holes: Depth of the hole
+    returns:
+    depth: # of filled cells above holes summed over all columns
+    parameters:
+    field : current state board
+    '''
+    fieldShape = field.shape
+    holes = 0
+    depth = 0
+    for i in range(fieldShape[0]):
+        for j in range(fieldShape[1]):
+            if field[i][j] == 0:
+                if j > 0 and j < fieldShape[1] and field[i][j-1] != 0:
+                    k = j
+                    while k >= 0 and k < fieldShape[1] and field[i][k] != 0:
+                        depth += 1
+                        k -= 1
+    return holes, depth
+
 def cum_wells(field):
     """
     cum_wells: The sum of the accumulated depths of the wells
