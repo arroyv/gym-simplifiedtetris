@@ -61,129 +61,129 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         
         return (shaping_reward, num_lines_cleared)            
     
-    def landing_height(field, turn):
-        """
-        landing height: the height of the current piece after falling
-        turn : current number of turns that have been played
-        position : position of next piece given the action array
-        """
-        l_height = env.n_rows
-        for i in range(len(field))[::-1]: # i in range of field, starting at the end of field
-            for j in range(len(field[i])):
-                if field[i][j] == turn and i < l_height:
-                    l_height = i
-        return l_height
+def landing_height(field, turn):
+    """
+    landing height: the height of the current piece after falling
+    turn : current number of turns that have been played
+    position : position of next piece given the action array
+    """
+    l_height = env.n_rows
+    for i in range(len(field))[::-1]: # i in range of field, starting at the end of field
+        for j in range(len(field[i])):
+            if field[i][j] == turn and i < l_height:
+                l_height = i
+    return l_height
 
-    def eroded_peices(cleared_current_turn, field , turn):
-        """
-        eroded peices: (Number of cells in the last piece that cleared lines) x (the number of cleared lines)
-        cleared_current_turn: The number of lines cleared on this turn
-        field: The current tetris board after the action
-        turn:  The current number of turns in the game
-        """
-        contribution = 4
-        if cleared_current_turn > 0:
-            for i in range(env.n_rows):
-                for j in range(env.n_cols):
-                    if field[i][j] == turn:
-                        contribution -= 1
-        return cleared_current_turn * contribution
-
-    def row_transitions(field):
-        """
-        Row transition: The number of horizontal cell transitions
-        field : The current state board
-        """
-        transitions = 0
+def eroded_peices(cleared_current_turn, field , turn):
+    """
+    eroded peices: (Number of cells in the last piece that cleared lines) x (the number of cleared lines)
+    cleared_current_turn: The number of lines cleared on this turn
+    field: The current tetris board after the action
+    turn:  The current number of turns in the game
+    """
+    contribution = 4
+    if cleared_current_turn > 0:
         for i in range(env.n_rows):
-            if field[i][0] == 0:
-                transitions += 1
-            if field[i][-1] == 0:
-                transitions += 1
             for j in range(env.n_cols):
-                if field[i][j] != 0:
-                    if (j - 1 > - 1 and field[i][j - 1] == 0):
-                        transitions += 1
-                    if (j + 1 != env.n_cols and field[i][j + 1] == 0):
-                        transitions += 1
-        return transitions
+                if field[i][j] == turn:
+                    contribution -= 1
+    return cleared_current_turn * contribution
 
-    def column_transitions(field):
-        """
-        column_transitions: The number of vertical cell transtions
-        field : The current state board
-        """
-        transitions = 0
-        for i in range(env.n_cols):
-            if field[0][i] == 0:
-                transitions += 1
-            if field[-1][i] == 0:
-                transitions += 1
-            for j in range(env.n_rows):
-                if field[j][i] != 0:
-                    if (j - 1 > - 1 and field[j-1][i] == 0):
-                        transitions += 1
-                    if (j + 1 != env.n_rows and field[j+1][i] == 0):
-                        transitions += 1
+def row_transitions(field):
+    """
+    Row transition: The number of horizontal cell transitions
+    field : The current state board
+    """
+    transitions = 0
+    for i in range(env.n_rows):
+        if field[i][0] == 0:
+            transitions += 1
+        if field[i][-1] == 0:
+            transitions += 1
+        for j in range(env.n_cols):
+            if field[i][j] != 0:
+                if (j - 1 > - 1 and field[i][j - 1] == 0):
+                    transitions += 1
+                if (j + 1 != env.n_cols and field[i][j + 1] == 0):
+                    transitions += 1
+    return transitions
 
-        return transitions
+def column_transitions(field):
+    """
+    column_transitions: The number of vertical cell transtions
+    field : The current state board
+    """
+    transitions = 0
+    for i in range(env.n_cols):
+        if field[0][i] == 0:
+            transitions += 1
+        if field[-1][i] == 0:
+            transitions += 1
+        for j in range(env.n_rows):
+            if field[j][i] != 0:
+                if (j - 1 > - 1 and field[j-1][i] == 0):
+                    transitions += 1
+                if (j + 1 != env.n_rows and field[j+1][i] == 0):
+                    transitions += 1
 
-    def num_holes(field):
-        """
-        num_holes: Number of holes on the board and the depth of the hole
-        returns:
-            holes: # of empty cells with at least one filled cell above
-            depth: # of filled cells above holes summed over all columns
-        parameters:
-            field : current state board
-        """
-        fieldShape = field.shape
-        holes = 0
-        depth = 0
-        for i in range(fieldShape[0]):
-            for j in range(fieldShape[1]):
-                if field[i][j] == 0:
-                    if i + 1 != fieldShape[0] and field[i+1][j] != 0:
-                        holes += 1
-                        k = i + 1
-                        while field[k][j] != 0:
-                            depth += 1
-                            k += 1
-        return holes, depth
+    return transitions
 
-    def cum_wells(field):
-        """
-        cum_wells: The sum of the accumulated depths of the wells
-        field: The current state board
-        """
-        cummulative_depth = 0
-        for i in range(env.n_cols):
-            for j in range(env.n_rows)[::-1]: 
-                if field[j][i] != 0:
+def num_holes(field):
+    """
+    num_holes: Number of holes on the board and the depth of the hole
+    returns:
+        holes: # of empty cells with at least one filled cell above
+        depth: # of filled cells above holes summed over all columns
+    parameters:
+        field : current state board
+    """
+    fieldShape = field.shape
+    holes = 0
+    depth = 0
+    for i in range(fieldShape[0]):
+        for j in range(fieldShape[1]):
+            if field[i][j] == 0:
+                if i + 1 != fieldShape[0] and field[i+1][j] != 0:
+                    holes += 1
+                    k = i + 1
+                    while field[k][j] != 0:
+                        depth += 1
+                        k += 1
+    return holes, depth
+
+def cum_wells(field):
+    """
+    cum_wells: The sum of the accumulated depths of the wells
+    field: The current state board
+    """
+    cummulative_depth = 0
+    for i in range(env.n_cols):
+        for j in range(env.n_rows)[::-1]: 
+            if field[j][i] != 0:
+                break
+            elif (i == 0 or (i - 1 > -1 and field[j][i - 1] != 0)) and ((i + 1 < env.n_cols and field[j][i+1] !=0) or i == env.n_cols - 1):
+                k = j
+                temp = 0
+                while field[k][i] == 0 and ((i == 0 or (i - 1 > -1 and field[k][i - 1] != 0)) and ((i + 1 < env.n_cols and field[k][i+1] !=0) or i == env.n_cols - 1)):
+                    temp += 1
+                    k -= 1
+                if (field[k][i] != 0 or k == env.n_rows):
+                    cummulative_depth += temp
+    return cummulative_depth
+
+def row_hole(field):
+    """
+    row_hole: The number of rows that contain at least one hole
+    field: The current state board
+    """
+    row_holes = 0
+    for i in range(env.n_rows):
+        for j in range(env.n_cols):
+            if field[i][j] == 0:
+                if i + 1 != env.n_rows and field[i + 1][j] != 0:
+                    row_holes += 1
                     break
-                elif (i == 0 or (i - 1 > -1 and field[j][i - 1] != 0)) and ((i + 1 < env.n_cols and field[j][i+1] !=0) or i == env.n_cols - 1):
-                    k = j
-                    temp = 0
-                    while field[k][i] == 0 and ((i == 0 or (i - 1 > -1 and field[k][i - 1] != 0)) and ((i + 1 < env.n_cols and field[k][i+1] !=0) or i == env.n_cols - 1)):
-                        temp += 1
-                        k -= 1
-                    if (field[k][i] != 0 or k == env.n_rows):
-                        cummulative_depth += temp
-        return cummulative_depth
-
-    def row_hole(field):
-        """
-        row_hole: The number of rows that contain at least one hole
-        field: The current state board
-        """
-        row_holes = 0
-        for i in range(env.n_rows):
-            for j in range(env.n_cols):
-                if field[i][j] == 0:
-                    if i + 1 != env.n_rows and field[i + 1][j] != 0:
-                        row_holes += 1
-                        break
-        return row_holes
+    return row_holes
 
 register_env(
     incomplete_id=f"simplifiedtetris-binary-shapednew", 
