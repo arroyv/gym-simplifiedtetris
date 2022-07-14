@@ -1,6 +1,7 @@
 """Simplified Tetris env, which has a binary obs space and a shaped reward function.
 """
-
+import numpy as np
+from gym import spaces
 from typing import Any
 from typing import Tuple
 from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (SimplifiedTetrisBinaryEnv,)
@@ -170,4 +171,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
                         break
         return row_holes
 
-register_env(incomplete_id="simplifiedtetris-binary-shapednew", entry_point="gym_simplifiedtetris.envs:SimplifiedTetrisBinaryShapednewEnv",)
+register_env(
+    incomplete_id=f"simplifiedtetris-binary-shapednew", 
+    entry_point=f"gym_simplifiedtetris.envs:SimplifiedTetrisBinaryShapednewEnv",
+)
