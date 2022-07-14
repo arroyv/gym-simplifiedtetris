@@ -29,11 +29,17 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # I chose the potential function to be a function of the well-known holes feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
         heuristic_value = np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
         print(np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid))
+        print()
         print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
+        print()
         print((self._engine._grid).cumsum(axis=1))
+        print()
         print(self._engine._grid)
+        print()
         print(~self._engine._grid)
+        print()
         print(self._engine._grid)
+        print()
         self._update_range(heuristic_value)
 
         # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. I also wanted the agent to frequently receive non-zero rewards (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
