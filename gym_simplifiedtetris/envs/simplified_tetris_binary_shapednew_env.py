@@ -46,8 +46,8 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
         print() 
 
-        print(num_holes(self._engine._grid))      
-        
+        print('number of holes', num_holes(self._engine._grid)[0])      
+        print('holes depth', num_holes(self._engine._grid)[1]) 
         self._update_range(heuristic_value)
 
         # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. I also wanted the agent to frequently receive non-zero rewards (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
@@ -143,10 +143,10 @@ def num_holes(field):
     for i in range(fieldShape[0]):
         for j in range(fieldShape[1]):
             if field[i][j] == 0:
-                if i + 1 != fieldShape[0] and field[i+1][j] != 0:
+                if j - 1 > 0 and field[i][j-1] != 0:
                     holes += 1
-                    k = i + 1
-                    while field[k][j] != 0:
+                    k = j + 1
+                    while field[i][k] != 0:
                         depth += 1
                         k += 1
     return holes, depth
