@@ -145,7 +145,7 @@ def num_holes(field):
             if field[i][j] == 0:
                 if j - 1 > 0 and field[i][j-1] != 0:
                     k = j
-                    while field[i][k] == 0:
+                    while k < fieldShape[1] and field[i][k] == 0:
                         holes += 1
                         k += 1
                     k = j + 1
