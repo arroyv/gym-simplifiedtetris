@@ -149,7 +149,7 @@ def num_holes(field):
                         holes += 1
                         k += 1
                     k = j + 1
-                    while field[i][k] != 0:
+                    while k < fieldShape[1] and field[i][k] != 0:
                         depth += 1
                         k += 1
     return holes, depth
