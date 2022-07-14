@@ -163,8 +163,8 @@ def depths(field):
         for j in range(fieldShape[1]):
             if field[i][j] == 0:
                 if j > 0 and j < fieldShape[1] and field[i][j-1] != 0:
-                    k = j
-                    while k >= 0 and k < fieldShape[1]:
+                    k = j - 1
+                    while k >= 0 and k < fieldShape[1] and field[i][k] != 0 :
                         depth += 1
                         k -= 1
     return depth
