@@ -44,7 +44,9 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print()
         print('(self._engine._grid).cumsum(axis=1) * ~self._engine._grid')
         print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
-        print()        
+        print() 
+
+        print(num_holes(self._engine._grid))      
         
         self._update_range(heuristic_value)
 
@@ -135,12 +137,13 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         parameters:
             field : current state board
         """
+        fieldShape = field.shape
         holes = 0
         depth = 0
-        for i in range(env.n_rows):
-            for j in range(env.n_cols):
+        for i in range(fieldShape[0]):
+            for j in range(fieldShape[1]):
                 if field[i][j] == 0:
-                    if i + 1 != env.n_rows and field[i+1][j] != 0:
+                    if i + 1 != fieldShape[0] and field[i+1][j] != 0:
                         holes += 1
                         k = i + 1
                         while field[k][j] != 0:
