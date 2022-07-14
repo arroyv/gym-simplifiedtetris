@@ -34,7 +34,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print()
         print('(self._engine._grid).cumsum(axis=1)',(self._engine._grid).cumsum(axis=1))
         print()
-        print('self._engine._grid', self._engine._grid)
+        print('self._engine._grid', self._engine._grid.astype(int))
         print()
         print('self._engine._grid.shape', self._engine._grid.shape)
         print()
