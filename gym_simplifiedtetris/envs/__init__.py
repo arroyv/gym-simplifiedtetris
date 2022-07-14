@@ -16,7 +16,7 @@ from gym_simplifiedtetris.envs.simplified_tetris_heights_env import (
 )
 
 from gym_simplifiedtetris.envs.simplified_tetris_binary_shapednew_env import (
-    SimplifiedTetrisBinaryEnv,
+    SimplifiedTetrisBinaryShapednewEnv,
 )
 
 __all__ = [

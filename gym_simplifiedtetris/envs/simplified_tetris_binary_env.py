@@ -8,7 +8,6 @@ from gym_simplifiedtetris.envs._simplified_tetris_base_env import (
 )
 from gym_simplifiedtetris.register import register_env
 
-
 class SimplifiedTetrisBinaryEnv(_SimplifiedTetrisBaseEnv):
     """A custom Gym env for Tetris.
 

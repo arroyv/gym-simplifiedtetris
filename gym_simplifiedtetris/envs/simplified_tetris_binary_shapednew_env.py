@@ -8,7 +8,6 @@ from gym_simplifiedtetris.envs.simplified_tetris_binary_env import (SimplifiedTe
 from gym_simplifiedtetris.register import register_env
 from gym_simplifiedtetris.envs.reward_shaping._potential_based_shaping_reward import _PotentialBasedShapingReward
 
-
 class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, SimplifiedTetrisBinaryEnv):
     """A simplified Tetris environment.
 
