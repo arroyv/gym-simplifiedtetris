@@ -33,21 +33,21 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print('self._engine._grid')
         print(self._engine._grid.astype(int))
         print()
-        print('~self._engine._grid')
-        print((~self._engine._grid).astype(int))
-        print()
-        print('(self._engine._grid).cumsum(axis=1)')
-        print((self._engine._grid).cumsum(axis=1))
-        print()
-        print('number or holes')
-        print(np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid))
-        print()
-        print('(self._engine._grid).cumsum(axis=1) * ~self._engine._grid')
-        print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
-        print() 
+        # print('~self._engine._grid')
+        # print((~self._engine._grid).astype(int))
+        # print()
+        # print('(self._engine._grid).cumsum(axis=1)')
+        # print((self._engine._grid).cumsum(axis=1))
+        # print()
+        # print('number or holes')
+        # print(np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid))
+        # print()
+        # print('(self._engine._grid).cumsum(axis=1) * ~self._engine._grid')
+        # print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
+        # print() 
 
-        print('number of holes', num_holes(self._engine._grid)[0])      
-        print('holes depth', num_holes(self._engine._grid)[1]) 
+        print('number of holes', num_holes(self._engine._grid))      
+        print('holes depth', depths(self._engine._grid)) 
         self._update_range(heuristic_value)
 
         # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. I also wanted the agent to frequently receive non-zero rewards (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
@@ -139,7 +139,6 @@ def num_holes(field):
     """
     fieldShape = field.shape
     holes = 0
-    depth = 0
     for i in range(fieldShape[0]):
         for j in range(fieldShape[1]):
             if field[i][j] == 0:
@@ -148,22 +147,17 @@ def num_holes(field):
                     while k < fieldShape[1] and field[i][k] == 0:
                         holes += 1
                         k += 1
-                    k = j + 1
-                    while k < fieldShape[1] and field[i][k] != 0:
-                        depth += 1
-                        k += 1
-    return holes, depth
+    return holes
 
-def holes(field):
+def depths(field):
     '''
-    num_holes: Depth of the hole
+    depths: Depth of the hole
     returns:
     depth: # of filled cells above holes summed over all columns
     parameters:
     field : current state board
     '''
     fieldShape = field.shape
-    holes = 0
     depth = 0
     for i in range(fieldShape[0]):
         for j in range(fieldShape[1]):
@@ -173,7 +167,7 @@ def holes(field):
                     while k >= 0 and k < fieldShape[1] and field[i][k] != 0:
                         depth += 1
                         k -= 1
-    return holes, depth
+    return depth
 
 def cum_wells(field):
     """
