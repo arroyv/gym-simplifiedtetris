@@ -21,7 +21,6 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
 
     def _get_reward(self) -> Tuple[float, int]:
         """Compute and return the potential-based shaping reward.
-
         :return: potential-based shaping reward and the number of lines cleared.
         """
         num_lines_cleared = self._engine._clear_rows()
@@ -35,7 +34,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print(self._engine._grid.astype(int))
         print()
         print('~self._engine._grid')
-        print(~self._engine._grid.astype(int))
+        print((~self._engine._grid).astype(int))
         print()
         print('(self._engine._grid).cumsum(axis=1)')
         print((self._engine._grid).cumsum(axis=1))
