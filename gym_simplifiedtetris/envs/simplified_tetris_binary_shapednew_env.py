@@ -60,74 +60,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         self._old_potential = new_potential
         
         return (shaping_reward, num_lines_cleared)            
-    
-def landing_height(field, turn):
-    """
-    landing height: the height of the current piece after falling
-    turn : current number of turns that have been played
-    position : position of next piece given the action array
-    """
-    l_height = env.n_rows
-    for i in range(len(field))[::-1]: # i in range of field, starting at the end of field
-        for j in range(len(field[i])):
-            if field[i][j] == turn and i < l_height:
-                l_height = i
-    return l_height
-
-def eroded_peices(cleared_current_turn, field , turn):
-    """
-    eroded peices: (Number of cells in the last piece that cleared lines) x (the number of cleared lines)
-    cleared_current_turn: The number of lines cleared on this turn
-    field: The current tetris board after the action
-    turn:  The current number of turns in the game
-    """
-    contribution = 4
-    if cleared_current_turn > 0:
-        for i in range(env.n_rows):
-            for j in range(env.n_cols):
-                if field[i][j] == turn:
-                    contribution -= 1
-    return cleared_current_turn * contribution
-
-def row_transitions(field):
-    """
-    Row transition: The number of horizontal cell transitions
-    field : The current state board
-    """
-    transitions = 0
-    for i in range(env.n_rows):
-        if field[i][0] == 0:
-            transitions += 1
-        if field[i][-1] == 0:
-            transitions += 1
-        for j in range(env.n_cols):
-            if field[i][j] != 0:
-                if (j - 1 > - 1 and field[i][j - 1] == 0):
-                    transitions += 1
-                if (j + 1 != env.n_cols and field[i][j + 1] == 0):
-                    transitions += 1
-    return transitions
-
-def column_transitions(field):
-    """
-    column_transitions: The number of vertical cell transtions
-    field : The current state board
-    """
-    transitions = 0
-    for i in range(env.n_cols):
-        if field[0][i] == 0:
-            transitions += 1
-        if field[-1][i] == 0:
-            transitions += 1
-        for j in range(env.n_rows):
-            if field[j][i] != 0:
-                if (j - 1 > - 1 and field[j-1][i] == 0):
-                    transitions += 1
-                if (j + 1 != env.n_rows and field[j+1][i] == 0):
-                    transitions += 1
-
-    return transitions
-
+# DONE
 def num_holes(field):
     """
     num_holes: Number of holes on the board and the depth of the hole
@@ -169,6 +102,43 @@ def depths(field):
                         k -= 1
     return depth
 
+# TODO
+def row_transitions(field):
+    """
+    Row transition: The number of horizontal cell transitions
+    field : The current state board
+    """
+    fieldShape = field.shape
+    num_transitions = 0
+    for i in range(fieldShape[0]):
+        for j in range(fieldShape[1]):
+            if field[i][j] == 0 and field[i][j+1] == 1:
+                num_transitions += 1
+            else:
+                if field[i][j+1] == 0:
+                    num_transitions += 1
+    return num_transitions
+
+def column_transitions(field):
+    """
+    column_transitions: The number of vertical cell transtions
+    field : The current state board
+    """
+    transitions = 0
+    for i in range(env.n_cols):
+        if field[0][i] == 0:
+            transitions += 1
+        if field[-1][i] == 0:
+            transitions += 1
+        for j in range(env.n_rows):
+            if field[j][i] != 0:
+                if (j - 1 > - 1 and field[j-1][i] == 0):
+                    transitions += 1
+                if (j + 1 != env.n_rows and field[j+1][i] == 0):
+                    transitions += 1
+
+    return transitions
+
 def cum_wells(field):
     """
     cum_wells: The sum of the accumulated depths of the wells
@@ -202,6 +172,37 @@ def row_hole(field):
                     row_holes += 1
                     break
     return row_holes
+
+# harder to implement
+def landing_height(field, turn):
+    """
+    landing height: the height of the current piece after falling
+    turn : current number of turns that have been played
+    position : position of next piece given the action array
+    """
+    l_height = env.n_rows
+    for i in range(len(field))[::-1]: # i in range of field, starting at the end of field
+        for j in range(len(field[i])):
+            if field[i][j] == turn and i < l_height:
+                l_height = i
+    return l_height
+
+def eroded_peices(cleared_current_turn, field , turn):
+    """
+    eroded peices: (Number of cells in the last piece that cleared lines) x (the number of cleared lines)
+    cleared_current_turn: The number of lines cleared on this turn
+    field: The current tetris board after the action
+    turn:  The current number of turns in the game
+    """
+    contribution = 4
+    if cleared_current_turn > 0:
+        for i in range(env.n_rows):
+            for j in range(env.n_cols):
+                if field[i][j] == turn:
+                    contribution -= 1
+    return cleared_current_turn * contribution
+
+
 
 register_env(
     incomplete_id=f"simplifiedtetris-binary-shapednew", 
