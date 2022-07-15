@@ -115,8 +115,8 @@ def row_transitions(field):
     """
     fieldShape = field.shape
     num_transitions = 0
-    for j in range(fieldShape[1]):
-        for i in range(fieldShape[0]):
+    for j in range(fieldShape[1] - 1):
+        for i in range(fieldShape[0] - 1):
             if field[i][j] == 0 and field[i][j+1] == 1:
                 num_transitions += 1
             else:
@@ -131,8 +131,8 @@ def column_transitions(field):
     """
     fieldShape = field.shape
     num_transitions = 0
-    for i in range(fieldShape[0]):
-        for j in range(fieldShape[1]):
+    for i in range(fieldShape[0] - 1):
+        for j in range(fieldShape[1] - 1):
             if field[i][j] == 0 and field[i][j+1] == 1:
                 num_transitions += 1
             else:
@@ -147,8 +147,8 @@ def row_hole(field):
     """
     fieldShape = field.shape
     row_holes = 0
-    for i in range(fieldShape[1])[::-1]: # i in range of field, starting at the end of field
-        for j in range(fieldShape[0]):
+    for i in range(fieldShape[1] - 1)[::-1]: # i in range of field, starting at the end of field
+        for j in range(fieldShape[0] - 1):
             if field[j][i] == 0:
                 k = i
                 while k - 1 != 0 and field[j][k - 1] == 0:
