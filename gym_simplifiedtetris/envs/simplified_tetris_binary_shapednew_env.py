@@ -50,7 +50,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print('holes depth: ', depths(self._engine._grid))
         print('row transitions: ', row_transitions(self._engine._grid)) 
         print('column_transitions: ', column_transitions(self._engine._grid))
-        print('cum_wells: ', cum_wells(self._engine._grid))
+        # print('cum_wells: ', cum_wells(self._engine._grid))
         print('row_hole: ', row_hole(self._engine._grid))
 
         self._update_range(heuristic_value)
@@ -117,10 +117,9 @@ def row_transitions(field):
     num_transitions = 0
     for j in range(fieldShape[1] - 1):
         for i in range(fieldShape[0] - 1):
-            if field[i][j] == 0 and field[i][j+1] == 1:
+            if field[i][j] == 0 and field[i+1][j] == 1:
                 num_transitions += 1
-            else:
-                if field[i][j+1] == 0:
+            elif field[i][j] == 1 and field[i+1][j] == 0:
                     num_transitions += 1
     return num_transitions
 
@@ -135,8 +134,7 @@ def column_transitions(field):
         for j in range(fieldShape[1] - 1):
             if field[i][j] == 0 and field[i][j+1] == 1:
                 num_transitions += 1
-            else:
-                if field[i][j+1] == 0:
+            elif field[i][j] == 1 and field[i][j+1] == 0:
                     num_transitions += 1
     return num_transitions
 
