@@ -119,10 +119,8 @@ def row_transitions(field):
         for i in range(fieldShape[0]):
             if i+1 < fieldShape[0]:
                 if field[i][j] == 0 and field[i+1][j] == 1:
-                    print(i,j, "transition 0 to 1")
                     num_transitions += 1
                 elif field[i][j] == 1 and field[i+1][j] == 0:
-                    print(i,j, "transition 1 to 0")
                     num_transitions += 1
     return num_transitions
 
