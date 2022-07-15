@@ -46,8 +46,13 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # print((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
         # print() 
 
-        print('number of holes', num_holes(self._engine._grid))      
-        print('holes depth', depths(self._engine._grid)) 
+        print('number of holes: ', num_holes(self._engine._grid))      
+        print('holes depth: ', depths(self._engine._grid))
+        print('row transitions: ', row_transitions(self._engine._grid)) 
+        print('column_transitions: ', column_transitions(self._engine._grid))
+        print('cum_wells: ', cum_wells(self._engine._grid))
+        print('row_hole: ', row_hole(self._engine._grid))
+
         self._update_range(heuristic_value)
 
         # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. I also wanted the agent to frequently receive non-zero rewards (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
@@ -110,8 +115,8 @@ def row_transitions(field):
     """
     fieldShape = field.shape
     num_transitions = 0
-    for i in range(fieldShape[0]):
-        for j in range(fieldShape[1]):
+    for j in range(fieldShape[1]):
+        for i in range(fieldShape[0]):
             if field[i][j] == 0 and field[i][j+1] == 1:
                 num_transitions += 1
             else:
@@ -121,58 +126,59 @@ def row_transitions(field):
 
 def column_transitions(field):
     """
-    column_transitions: The number of vertical cell transtions
+    column_transitions: The number of vertical cell transitions
     field : The current state board
     """
-    transitions = 0
-    for i in range(env.n_cols):
-        if field[0][i] == 0:
-            transitions += 1
-        if field[-1][i] == 0:
-            transitions += 1
-        for j in range(env.n_rows):
-            if field[j][i] != 0:
-                if (j - 1 > - 1 and field[j-1][i] == 0):
-                    transitions += 1
-                if (j + 1 != env.n_rows and field[j+1][i] == 0):
-                    transitions += 1
-
-    return transitions
-
-def cum_wells(field):
-    """
-    cum_wells: The sum of the accumulated depths of the wells
-    field: The current state board
-    """
-    cummulative_depth = 0
-    for i in range(env.n_cols):
-        for j in range(env.n_rows)[::-1]: 
-            if field[j][i] != 0:
-                break
-            elif (i == 0 or (i - 1 > -1 and field[j][i - 1] != 0)) and ((i + 1 < env.n_cols and field[j][i+1] !=0) or i == env.n_cols - 1):
-                k = j
-                temp = 0
-                while field[k][i] == 0 and ((i == 0 or (i - 1 > -1 and field[k][i - 1] != 0)) and ((i + 1 < env.n_cols and field[k][i+1] !=0) or i == env.n_cols - 1)):
-                    temp += 1
-                    k -= 1
-                if (field[k][i] != 0 or k == env.n_rows):
-                    cummulative_depth += temp
-    return cummulative_depth
+    fieldShape = field.shape
+    num_transitions = 0
+    for i in range(fieldShape[0]):
+        for j in range(fieldShape[1]):
+            if field[i][j] == 0 and field[i][j+1] == 1:
+                num_transitions += 1
+            else:
+                if field[i][j+1] == 0:
+                    num_transitions += 1
+    return num_transitions
 
 def row_hole(field):
     """
     row_hole: The number of rows that contain at least one hole
     field: The current state board
     """
+    fieldShape = field.shape
     row_holes = 0
-    for i in range(env.n_rows):
-        for j in range(env.n_cols):
-            if field[i][j] == 0:
-                if i + 1 != env.n_rows and field[i + 1][j] != 0:
-                    row_holes += 1
-                    break
+    for i in range(fieldShape[1])[::-1]: # i in range of field, starting at the end of field
+        for j in range(fieldShape[0]):
+            if field[j][i] == 0:
+                k = i
+                while k - 1 != 0 and field[j][k - 1] == 0:
+                    if field[j][k - 1] == 0:
+                        row_holes += 1
+                        break
+                    else:
+                        k -= 1
     return row_holes
 
+def cum_wells(field):
+    """
+    cum_wells: The sum of the accumulated depths of the wells
+    field: The current state board
+    """
+    fieldShape = field.shape
+    cummulative_depth = 0
+    for i in range(fieldShape[0]):
+        for j in range(fieldShape[1])[::-1]: 
+            if field[j][i] != 0:
+                break
+            elif (i == 0 or (i - 1 > -1 and field[j][i - 1] != 0)) and ((i + 1 < fieldShape[0] and field[j][i+1] !=0) or i == fieldShape[0] - 1):
+                k = j
+                temp = 0
+                while field[k][i] == 0 and ((i == 0 or (i - 1 > -1 and field[k][i - 1] != 0)) and ((i + 1 < fieldShape[0] and field[k][i+1] !=0) or i == fieldShape[0] - 1)):
+                    temp += 1
+                    k -= 1
+                if (field[k][i] != 0 or k == fieldShape[1]):
+                    cummulative_depth += temp
+    return cummulative_depth
 # harder to implement
 def landing_height(field, turn):
     """
