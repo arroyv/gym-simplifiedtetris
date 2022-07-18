@@ -107,7 +107,6 @@ def depths(field):
                         k -= 1
     return depth
 
-# TODO
 def row_transitions(field):
     """
     Row transition: The number of horizontal cell transitions
@@ -117,10 +116,10 @@ def row_transitions(field):
     num_transitions = 0
     for j in range(fieldShape[1]):
         for i in range(fieldShape[0]):
-            if i+1 < fieldShape[0]:
-                if field[i][j] == 0 and field[i+1][j] == 1:
+            if i + 1 < fieldShape[0]:
+                if field[i][j] == 0 and field[i + 1][j] == 1:
                     num_transitions += 1
-                elif field[i][j] == 1 and field[i+1][j] == 0:
+                elif field[i][j] == 1 and field[i + 1][j] == 0:
                     num_transitions += 1
     return num_transitions
 
@@ -140,6 +139,7 @@ def column_transitions(field):
                     num_transitions += 1
     return num_transitions
 
+# TODO
 def row_hole(field):
     """
     row_hole: The number of rows that contain at least one hole
@@ -147,16 +147,22 @@ def row_hole(field):
     """
     fieldShape = field.shape
     row_holes = 0
-    for i in range(fieldShape[1] - 1)[::-1]: # i in range of field, starting at the end of field
-        for j in range(fieldShape[0] - 1):
-            if field[j][i] == 0:
-                k = i
-                while k - 1 != 0 and field[j][k - 1] == 0:
-                    if field[j][k - 1] == 0:
-                        row_holes += 1
-                        break
-                    else:
-                        k -= 1
+    i = 0
+    j = 19
+    while i  >= 0 and i < fieldShape[0]:
+        print('l2',j,i)
+        if field[i][j] == 0:
+            k = j
+            while k  > 0 and k < fieldShape[1]:
+                k -= 1
+                if field[i][k] == 1:
+                    print('l3',j,i,k)
+                    row_holes += 1
+                    j -= 1
+                    i = 0
+                    print('l3',j,i,k)
+                    break
+        i += 1
     return row_holes
 
 def cum_wells(field):
@@ -165,19 +171,31 @@ def cum_wells(field):
     field: The current state board
     """
     fieldShape = field.shape
+    print(fieldShape)
     cummulative_depth = 0
     for i in range(fieldShape[0]):
-        for j in range(fieldShape[1])[::-1]: 
-            if field[j][i] != 0:
-                break
-            elif (i == 0 or (i - 1 > -1 and field[j][i - 1] != 0)) and ((i + 1 < fieldShape[0] and field[j][i+1] !=0) or i == fieldShape[0] - 1):
-                k = j
-                temp = 0
-                while field[k][i] == 0 and ((i == 0 or (i - 1 > -1 and field[k][i - 1] != 0)) and ((i + 1 < fieldShape[0] and field[k][i+1] !=0) or i == fieldShape[0] - 1)):
-                    temp += 1
-                    k -= 1
-                if (field[k][i] != 0 or k == fieldShape[1]):
+        temp = 0
+        for j in range(fieldShape[1]):
+            if field[i][j] == 0 and i == 0 and field[i + 1][j] == 1:
+                temp += 1
+                print(i,j,i+1, i-1)
+                if field[i][j+1] == 1:
+                    print(i,j,i+1, i-1, temp)
                     cummulative_depth += temp
+            elif field[i][j] == 0 and i == fieldShape[0] - 1 and field[i - 1][j] == 1:
+                temp += 1
+                print(i,j,i+1, i-1)
+                if field[i][j+1] == 1:
+                    print(i,j,i+1, i-1, temp)
+                    cummulative_depth += temp
+
+            elif field[i][j] == 0 and i - 1 >= 0 and i + 1 < fieldShape[0] and field[i - 1][j] == 1 and field[i + 1][j] == 1:
+                temp += 1
+                print(i,j,i+1, i-1)
+                if field[i][j+1] == 1:
+                    print(i,j,i+1, i-1, temp)
+                    cummulative_depth += temp
+                
     return cummulative_depth
 # harder to implement
 def landing_height(field, turn):
