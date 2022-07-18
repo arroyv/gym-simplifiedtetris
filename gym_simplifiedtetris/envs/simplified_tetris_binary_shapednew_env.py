@@ -50,7 +50,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print('holes depth: ', depths(self._engine._grid))
         print('row transitions: ', row_transitions(self._engine._grid)) 
         print('column_transitions: ', column_transitions(self._engine._grid))
-        # print('cum_wells: ', cum_wells(self._engine._grid))
+        print('cum_wells: ', cum_wells(self._engine._grid))
         print('row_hole: ', row_hole(self._engine._grid))
 
         self._update_range(heuristic_value)
