@@ -178,30 +178,30 @@ def cum_wells(field):
         for j in range(fieldShape[1]):
             if field[i][j] == 0 and i == 0 and field[i + 1][j] == 1 and j + 1 <= fieldShape[1]:
                 temp += 1
-                print('s1',i,j,i+1, i-1)
+                # print('s1',i,j,i+1, i-1)
                 if j + 1 == fieldShape[1]:
                     cummulative_depth += temp
                 elif field[i][j+1] == 1:
-                    print('s1',i,j,i+1, i-1, temp)
+                    # print('s1',i,j,i+1, i-1, temp)
                     cummulative_depth += temp
             elif field[i][j] == 0 and i == fieldShape[0] and field[i - 1][j] == 1 and j + 1 <= fieldShape[1]:
                 temp += 1
-                print('s2',i,j,i+1, i-1)
+                # print('s2',i,j,i+1, i-1)
                 if j + 1 == fieldShape[1]:
                     cummulative_depth += temp
                 elif field[i][j+1] == 1:
-                    print('s2',i,j,i+1, i-1, temp)
+                    # print('s2',i,j,i+1, i-1, temp)
                     cummulative_depth += temp
             elif field[i][j] == 0 and i - 1 >= 0 and i + 1 < fieldShape[0] and field[i - 1][j] == 1 and field[i + 1][j] == 1 and j + 1 <= fieldShape[1]:
                 temp += 1
-                print('s3',i,j,i+1, i-1)
+                # print('s3',i,j,i+1, i-1)
                 if j + 1 == fieldShape[1]:
                     cummulative_depth += temp
                 elif field[i][j+1] == 1:
-                    print('s3',i,j,i+1, i-1, temp)
+                    # print('s3',i,j,i+1, i-1, temp)
                     cummulative_depth += temp
     return cummulative_depth
-    
+
 # harder to implement
 def landing_height(field, turn):
     """
