@@ -150,17 +150,17 @@ def row_hole(field):
     i = 0
     j = 19
     while i  >= 0 and i < fieldShape[0]:
-        print('l2',j,i)
+        # print('l2',j,i)
         if field[i][j] == 0:
             k = j
             while k  > 0 and k < fieldShape[1]:
                 k -= 1
                 if field[i][k] == 1:
-                    print('l3',j,i,k)
+                    # print('l3',j,i,k)
                     row_holes += 1
                     j -= 1
                     i = 0
-                    print('l3',j,i,k)
+                    # print('l3',j,i,k)
                     break
         i += 1
     return row_holes
