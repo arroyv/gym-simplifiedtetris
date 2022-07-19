@@ -25,7 +25,8 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         """
         num_lines_cleared = self._engine._clear_rows()
 
-        # I chose the potential function to be a function of the well-known holes feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
+        # I chose the potential function to be a function of the well-known holes 
+        # feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
         heuristic_value = np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
         print('self._engine._grid.shape')
         print(self._engine._grid.shape)
@@ -53,18 +54,33 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print('cum_wells: ', cum_wells(self._engine._grid))
         print('row_hole: ', row_hole(self._engine._grid))
 
+        # num_holes = num_holes(self._engine._grid)
+        depths = depths(self._engine._grid)
+        row_transitions = row_transitions(self._engine._grid)
+        column_transitions = column_transitions(self._engine._grid)
+        cum_wells = cum_wells(self._engine._grid)
+        row_hole = row_hole(self._engine._grid)
+
         self._update_range(heuristic_value)
 
-        # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. I also wanted the agent to frequently receive non-zero rewards (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
+        # I wanted the difference in potentials to be in [-1, 1] to improve the stability of neural network convergence. 
+        # I also wanted the agent to frequently receive non-zero rewards 
+        # (since bad-performing agents in the standard game of Tetris rarely receive non-zero rewards). 
+        # Hence, the value of holes was scaled by using the smallest and largest values of holes seen thus far to obtain a value in [0, 1). 
+        # The result of this was then subtracted from 1 (to obtain a value in (0, 1]) because a state with a larger value 
+        # of holes has a smaller potential (generally speaking). The function numpy.clip is redundant here.
         new_potential = np.clip(1 - (heuristic_value - self._heuristic_range["min"]) / (self._heuristic_range["max"] + 1e-9), 0, 1,)
 
-        # Notice that gamma was set to 1, which isn't strictly allowed since it should be less than 1 according to Theorem 1 in this paper. I found that the agent rarely received positive rewards using this reward function because the agent was frequently transitioning to states with a lower potential (since it was rarely clearing lines).
+        # Notice that gamma was set to 1, which isn't strictly allowed since it should be less than 1 according to Theorem 1 in this paper. 
+        # I found that the agent rarely received positive rewards using this reward function because the agent was frequently transitioning 
+        # to states with a lower potential (since it was rarely clearing lines).
         # HACK: Added 0.3.
-        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3
-
+        # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 
+        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - row_transitions - column_transitions - cum_wells - depths
+        # - row transitions - column transitions -4 x holes - cumulative wells
         self._old_potential = new_potential
         
-        return (shaping_reward, num_lines_cleared)            
+        return (shaping_reward, num_lines_cleared, row_transitions, column_transitions, cum_wells,depths )           
 # DONE
 def num_holes(field):
     """
