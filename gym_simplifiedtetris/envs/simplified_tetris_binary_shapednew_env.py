@@ -80,7 +80,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # - row transitions - column transitions -4 x holes - cumulative wells
         self._old_potential = new_potential
         
-        return (shaping_reward, num_lines_cleared, row_transitions, column_transitions, cum_wells,depths )           
+        return (shaping_reward, num_lines_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_depths, n_row_hole)           
 # DONE
 def num_holes(field):
     """
