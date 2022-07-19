@@ -55,11 +55,11 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         print('row_hole: ', row_hole(self._engine._grid))
 
         # num_holes = num_holes(self._engine._grid)
-        depths = depths(self._engine._grid)
-        row_transitions = row_transitions(self._engine._grid)
-        column_transitions = column_transitions(self._engine._grid)
-        cum_wells = cum_wells(self._engine._grid)
-        row_hole = row_hole(self._engine._grid)
+        n_depths = depths(self._engine._grid)
+        n_row_transitions = row_transitions(self._engine._grid)
+        n_column_transitions = column_transitions(self._engine._grid)
+        n_cum_wells = cum_wells(self._engine._grid)
+        n_row_hole = row_hole(self._engine._grid)
 
         self._update_range(heuristic_value)
 
@@ -76,7 +76,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # to states with a lower potential (since it was rarely clearing lines).
         # HACK: Added 0.3.
         # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 
-        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - row_transitions - column_transitions - cum_wells - depths
+        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - n_row_transitions - n_column_transitions - n_cum_wells - n_depths - n_row_hole
         # - row transitions - column transitions -4 x holes - cumulative wells
         self._old_potential = new_potential
         
