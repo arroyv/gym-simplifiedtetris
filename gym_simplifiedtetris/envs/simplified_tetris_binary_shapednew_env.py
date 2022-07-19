@@ -181,14 +181,13 @@ def row_hole(field):
         i += 1
     return row_holes
 
-import numpy as np
 def cum_wells(field):
     """
     cum_wells: The sum of the accumulated depths of the wells
     field: The current state board
     """
     fieldShape = field.shape
-    print(fieldShape)
+    # print(fieldShape)
     cummulative_depth = 0
     for i in range(fieldShape[0]):
         temp = 0
