@@ -165,6 +165,7 @@ def row_hole(field):
         i += 1
     return row_holes
 
+import numpy as np
 def cum_wells(field):
     """
     cum_wells: The sum of the accumulated depths of the wells
@@ -186,7 +187,7 @@ def cum_wells(field):
                 elif field[i][j+1] == 1:
                     # print('s1',i,j,i+1, i-1, temp)
                     cummulative_depth += temp
-            elif field[i][j] == 0 and i == fieldShape[0] and field[i - 1][j] == 1 and j + 1 <= fieldShape[1] and j - 1 >= 0 and  field[i][j-1] == 0:
+            elif field[i][j] == 0 and i == fieldShape[0] - 1 and field[i - 1][j] == 1 and j + 1 <= fieldShape[1] and j - 1 >= 0 and  field[i][j-1] == 0:
                 temp += 1
                 # print('s2',i,j,i+1, i-1)
                 if j + 1 == fieldShape[1]:
