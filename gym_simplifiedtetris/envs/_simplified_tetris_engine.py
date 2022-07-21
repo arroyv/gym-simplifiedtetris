@@ -6,7 +6,7 @@ import time
 from copy import deepcopy
 from typing import Dict, Iterable, List, Tuple, Union
 
-import cv2.cv2 as cv
+import cv2 as cv
 import numpy as np
 import torch as th
 from PIL import Image
