@@ -60,8 +60,8 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         n_column_transitions = column_transitions(self._engine._grid)
         n_cum_wells = cum_wells(self._engine._grid)
         n_row_hole = row_hole(self._engine._grid)
-        landing_height = get_landing_height()
-        eroded_cells = get_eroded_cells()
+        landing_height = get_landing_height(self)
+        eroded_cells = get_eroded_cells(self)
 
 
         self._update_range(heuristic_value)
