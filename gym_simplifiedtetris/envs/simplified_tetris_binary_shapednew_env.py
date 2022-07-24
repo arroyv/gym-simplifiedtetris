@@ -55,11 +55,14 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # print('row_hole: ', row_hole(self._engine._grid))
 
         # num_holes = num_holes(self._engine._grid)
-        n_depths = depths(self._engine._grid)
+        # n_depths = depths(self._engine._grid)
         n_row_transitions = row_transitions(self._engine._grid)
         n_column_transitions = column_transitions(self._engine._grid)
         n_cum_wells = cum_wells(self._engine._grid)
         n_row_hole = row_hole(self._engine._grid)
+        landing_height = get_landing_height()
+        eroded_cells = get_eroded_cells()
+
 
         self._update_range(heuristic_value)
 
@@ -76,11 +79,11 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # to states with a lower potential (since it was rarely clearing lines).
         # HACK: Added 0.3.
         # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 
-        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - n_row_transitions - n_column_transitions - n_cum_wells - n_depths - n_row_hole
+        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - n_row_transitions - n_column_transitions - n_cum_wells - n_row_hole - landing_height + eroded_cells #- n_depths
         # - row transitions - column transitions -4 x holes - cumulative wells
         self._old_potential = new_potential
         
-        return (shaping_reward, num_lines_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_depths, n_row_hole)           
+        return (shaping_reward, num_lines_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells) # n_depths
 # DONE
 def num_holes(field):
     """
@@ -220,34 +223,33 @@ def cum_wells(field):
                     cummulative_depth += temp
     return cummulative_depth
 
-# harder to implement
-def landing_height(field, turn):
-    """
-    landing height: the height of the current piece after falling
-    turn : current number of turns that have been played
-    position : position of next piece given the action array
-    """
-    l_height = env.n_rows
-    for i in range(len(field))[::-1]: # i in range of field, starting at the end of field
-        for j in range(len(field[i])):
-            if field[i][j] == turn and i < l_height:
-                l_height = i
-    return l_height
+def get_landing_height(self):
+    """Compute the landing height and return it.
 
-def eroded_peices(cleared_current_turn, field , turn):
+    Landing height = the midpoint of the last piece to be placed.
+
+    :param env: environment that the agent resides in.
+    :return: landing height.
     """
-    eroded peices: (Number of cells in the last piece that cleared lines) x (the number of cleared lines)
-    cleared_current_turn: The number of lines cleared on this turn
-    field: The current tetris board after the action
-    turn:  The current number of turns in the game
+    return (
+        self._engine._last_move_info["landing_height"]
+        if "landing_height" in self._engine._last_move_info
+        else 0
+    )
+
+def get_eroded_cells(self):
+    """Return the eroded cells value.
+
+    Eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
+
+    :param env: environment that the agent resides in.
+    :return: eroded cells.
     """
-    contribution = 4
-    if cleared_current_turn > 0:
-        for i in range(env.n_rows):
-            for j in range(env.n_cols):
-                if field[i][j] == turn:
-                    contribution -= 1
-    return cleared_current_turn * contribution
+    return (
+        self._engine._last_move_info["num_rows_cleared"]* self._engine._last_move_info["eliminated_num_blocks"]
+        if "num_rows_cleared" in self._engine._last_move_info
+        else 0
+    )
 
 
 
