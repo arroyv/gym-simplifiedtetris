@@ -29,7 +29,7 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
 
         # heuristic_value = np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
-        heuristic_value = np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
+        heuristic_value = num_holes + n_cum_wells + n_row_transitions + n_column_transitions + landing_height - eroded_cells
 
 
         # print('self._engine._grid.shape')
@@ -82,9 +82,10 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # I found that the agent rarely received positive rewards using this reward function because the agent was frequently transitioning 
         # to states with a lower potential (since it was rarely clearing lines).
         # HACK: Added 0.3.
-
-
-        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 
+        
+        # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3
+        shaping_reward = (new_potential - self._old_potential)
+        # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 
         # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - n_row_transitions - n_column_transitions - n_cum_wells - n_row_hole - landing_height + eroded_cells #- n_depths
         # shaping_reward = (-4 * num_holes) - n_cum_wells - n_row_transitions - n_column_transitions - landing_height + eroded_cells  # −4 × holes − cumulative wells − row transitions − column transitions − landing height + eroded cells
 
