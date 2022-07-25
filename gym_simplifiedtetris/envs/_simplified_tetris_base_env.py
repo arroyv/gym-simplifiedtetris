@@ -153,7 +153,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
             info["eroded_cells"] = eroded_cells
 
             # return self._get_obs(), reward, False, info
-            return  np.append(self._get_obs(), (num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells)), reward, False, info
+            return  np.append(self._get_obs(), (num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells)), reward, True, info
 
         reward, num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells  = self._get_reward()
         self._engine._score += num_rows_cleared
