@@ -256,6 +256,122 @@ def get_eroded_cells(self):
 
 
 
+# def _get_landing_height(self, env: SimplifiedTetrisEngine) -> int:
+#         """Compute the landing height and return it.
+
+#         Landing height = the midpoint of the last piece to be placed.
+
+#         :param env: environment that the agent resides in.
+#         :return: landing height.
+#         """
+#         return (
+#             env._engine._last_move_info["landing_height"]
+#             if "landing_height" in env._engine._last_move_info
+#             else 0
+#         )
+
+#     def _get_eroded_cells(self, env: SimplifiedTetrisEngine) -> int:
+#         """Return the eroded cells value.
+
+#         Eroded cells = number of rows cleared x number of blocks removed that were added to the grid by the last action.
+
+#         :param env: environment that the agent resides in.
+#         :return: eroded cells.
+#         """
+#         return (
+#             env._engine._last_move_info["num_rows_cleared"]
+#             * env._engine._last_move_info["eliminated_num_blocks"]
+#             if "num_rows_cleared" in env._engine._last_move_info
+#             else 0
+#         )
+
+#     def _get_row_transitions(self, env: SimplifiedTetrisEngine) -> int:
+#         """Return the row transitions value.
+
+#         Row transitions = Number of transitions from empty to full cells (or vice versa), examining each row one at a time.
+
+#         Author: Ben Schofield
+#         Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L45
+
+#         :param env: environment that the agent resides in.
+#         :return: row transitions.
+#         """
+#         # Adds a column either side.
+#         grid = np.ones((env._engine._width + 2, env._engine._height), dtype="bool")
+
+#         grid[1:-1, :] = env._engine._grid.copy()
+#         return int(np.diff(grid.T).sum())
+
+#     def _get_col_transitions(self, env: SimplifiedTetrisEngine) -> int:
+#         """Return the column transitions value.
+
+#         Column transitions = Number of transitions from empty to full (or vice versa), examining each column one at a time.
+
+#         Author: Ben Schofield
+#         Source: https://github.com/Benjscho/gym-mdptetris/blob/1a47edc33330deb638a03275e484c3e26932d802/gym_mdptetris/envs/feature_functions.py#L60
+
+#         :param env: environment that the agent resides in.
+#         :return: column transitions.
+#         """
+#         # Adds a full row to the bottom.
+#         grid = np.ones((env._engine._width, env._engine._height + 1), dtype="bool")
+
+#         grid[:, :-1] = env._engine._grid.copy()
+#         return int(np.diff(grid).sum())
+
+#     def _get_holes(self, env: SimplifiedTetrisEngine) -> int:
+#         """Compute the number of holes present in the current grid and return it.
+
+#         A hole is an empty cell with at least one full cell above it in the same column.
+
+#         :param env: environment that the agent resides in.
+#         :return: value of the feature holes.
+#         """
+#         return np.count_nonzero((env._engine._grid).cumsum(axis=1) * ~env._engine._grid)
+
+#     def _get_cum_wells(self, env: SimplifiedTetrisEngine) -> int:
+#         """Compute the cumulative wells value and return it.
+
+#         Cumulative wells is defined here:
+#         https://arxiv.org/abs/1905.01652.  For each well, find the depth of
+#         the well, d(w), then calculate the sum of i from i=1 to d(w).  Lastly,
+#         sum the well sums.  A block is part of a well if the cells directly on
+#         either side are full and the block can be reached from above (i.e., there are no full cells directly above it).
+
+#         Attribution: Ben Schofield
+
+#         :param env: environment that the agent resides in.
+#         :return: cumulative wells value.
+#         """
+#         grid_ext = np.ones(
+#             (env._engine._width + 2, env._engine._height + 1), dtype="bool"
+#         )
+#         grid_ext[1:-1, 1:] = env._engine._grid[:, : env._engine._height]
+
+#         # This includes some cells that cannot be reached from above.
+#         potential_wells = (
+#             np.roll(grid_ext, 1, axis=0) & np.roll(grid_ext, -1, axis=0) & ~grid_ext
+#         )
+
+#         col_heights = np.zeros(env._engine._width + 2)
+#         col_heights[1:-1] = env._engine._height - np.argmax(env._engine._grid, axis=1)
+#         col_heights = np.where(col_heights == env._engine._height, 0, col_heights)
+
+#         x = np.linspace(1, env._engine._width + 2, env._engine._width + 2)
+#         y = np.linspace(env._engine._height + 1, 1, env._engine._height + 1)
+#         _, yv = np.meshgrid(x, y)
+
+#         # A cell that is part of a well must be above the playfield's outline, which consists of the highest full cells in each column.
+#         above_outline = (col_heights.reshape(-1, 1) < yv.T).astype(int)
+
+#         # Exclude the cells that cannot be reached from above by multiplying by 'above_outline'.
+#         cumulative_wells = np.sum(
+#             np.cumsum(potential_wells, axis=1) * above_outline,
+#         )
+
+#         return cumulative_wells
+
+
 register_env(
     incomplete_id=f"simplifiedtetris-binary-shapednew", 
     entry_point=f"gym_simplifiedtetris.envs:SimplifiedTetrisBinaryShapednewEnv",
