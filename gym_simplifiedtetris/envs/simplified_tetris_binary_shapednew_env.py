@@ -176,7 +176,7 @@ def row_hole(field):
     fieldShape = field.shape
     row_holes = 0
     i = 0
-    j = 19
+    j = fieldShape[1] - 1
     while i  >= 0 and i < fieldShape[0]:
         # print('l2',j,i)
         if field[i][j] == 0:
