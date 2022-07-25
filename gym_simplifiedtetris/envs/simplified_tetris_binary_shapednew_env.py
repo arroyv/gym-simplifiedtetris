@@ -79,8 +79,11 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # to states with a lower potential (since it was rarely clearing lines).
         # HACK: Added 0.3.
         # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 
-        shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - n_row_transitions - n_column_transitions - n_cum_wells - n_row_hole - landing_height + eroded_cells #- n_depths
+        # shaping_reward = (new_potential - self._old_potential) + num_lines_cleared + 0.3 - n_row_transitions - n_column_transitions - n_cum_wells - n_row_hole - landing_height + eroded_cells #- n_depths
+        shaping_reward = -4 * heuristic_value - n_cum_wells - n_row_transitions - n_column_transitions - landing_height + eroded_cells  # −4 × holes − cumulative wells − row transitions − column transitions − landing height + eroded cells
+
         # - row transitions - column transitions -4 x holes - cumulative wells
+        # −4 × holes − cumulative wells − row transitions − column transitions − landing height + eroded cells
         self._old_potential = new_potential
         
         return (shaping_reward, num_lines_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells) # n_depths
