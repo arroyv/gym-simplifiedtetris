@@ -140,20 +140,7 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
             self._engine._final_scores = np.append(
                 self._engine._final_scores, self._engine._score
             )
-            # return self._get_obs(), self._get_terminal_reward(), True, info
-            reward, num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells  = self._get_reward()
-
-            info["num_rows_cleared"] = num_rows_cleared
-            info["n_row_transitions"] = n_row_transitions
-            info["n_column_transitions"] = n_column_transitions
-            info["n_cum_wells"] = n_cum_wells
-            #info["n_depths"] = n_depths
-            info["n_row_hole"] = n_row_hole
-            info["landing_height"] = landing_height
-            info["eroded_cells"] = eroded_cells
-
-            # return self._get_obs(), reward, False, info
-            return  np.append(self._get_obs(), (num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells)), reward, True, info
+            return self._get_obs(), self._get_terminal_reward(), True, info
 
         reward, num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells  = self._get_reward()
         self._engine._score += num_rows_cleared
@@ -169,9 +156,8 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
         info["n_row_hole"] = n_row_hole
         info["landing_height"] = landing_height
         info["eroded_cells"] = eroded_cells
-
-        # return self._get_obs(), reward, False, info
-        return  np.append(self._get_obs(), (num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells)), reward, False, info
+        
+        return self._get_obs(), reward, False, info
 
     def render(self, mode: str = "human") -> np.ndarray:
         """Render the env.
