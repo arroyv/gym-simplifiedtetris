@@ -67,7 +67,10 @@ class SimplifiedTetrisBinaryShapednewEnv(_PotentialBasedShapingReward, Simplifie
         # feature because the number of holes in a given state is (loosely speaking) inversely proportional to the potential of a state.
 
         # heuristic_value = np.count_nonzero((self._engine._grid).cumsum(axis=1) * ~self._engine._grid)
-        heuristic_value = -4 * num_holes - n_cum_wells - n_row_transitions - n_column_transitions - landing_height + eroded_cells
+        heuristic_value = -7.899265427351652 * num_holes - 3.3855972247263626 * n_cum_wells - 3.2178882868487753 * n_row_transitions - 9.348695305445199 * n_column_transitions - -4.500158825082766*landing_height + 3.4181268101392694 * num_lines_cleared
+
+        # heuristic_value = -4 * num_holes - n_cum_wells - n_row_transitions - n_column_transitions - landing_height + eroded_cells
+
 
 
         self._update_range(heuristic_value)
