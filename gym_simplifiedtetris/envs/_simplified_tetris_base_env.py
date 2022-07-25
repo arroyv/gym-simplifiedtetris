@@ -141,6 +141,8 @@ class _SimplifiedTetrisBaseEnv(gym.Env):
                 self._engine._final_scores, self._engine._score
             )
             # return self._get_obs(), self._get_terminal_reward(), True, info
+            reward, num_rows_cleared, n_row_transitions, n_column_transitions, n_cum_wells, n_row_hole, landing_height, eroded_cells  = self._get_reward()
+
             info["num_rows_cleared"] = num_rows_cleared
             info["n_row_transitions"] = n_row_transitions
             info["n_column_transitions"] = n_column_transitions
